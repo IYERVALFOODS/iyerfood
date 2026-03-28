@@ -916,12 +916,21 @@ function startUPIPayment() {
   const amount = getCartTotal();
 
   const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
-  window.location.href = upiLink;
 
   setTimeout(() => {
-    alert("If payment app didn't open, pay manually:\n" + UPI_ID);
-  }, 2000);
-} // ✅ THIS LINE WAS MISSING
+  alert("After completing payment, click OK to confirm");
+  
+  const confirmPay = confirm("Did you complete the payment?");
+  
+  if (confirmPay) {
+    const order = buildOrder(formData, "paid");
+    finalizeOrder(order);
+  } else {
+    alert("Payment not confirmed");
+  }
+}, 2000);  
+
+  // ✅ THIS LINE WAS MISSING
 
 /* ⛔ THIS COMES AFTER */
 function placeOrder(event) {
