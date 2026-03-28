@@ -594,7 +594,10 @@
           Notes
           <textarea name="notes" placeholder="Add any delivery notes or preferences"></textarea>
         </label>
-        <button class="submit-btn" id="payNowBtn" type="button">Pay Now</button>
+        <button class="submit-btn" id="payNowBtn" type="button">Pay via UPI</button>
+
+<button type="button" onclick="payWithApp('gpay')" class="ghost-btn">Open GPay</button>
+<button type="button" onclick="payWithApp('phonepe')" class="ghost-btn">Open PhonePe</button>
       </form>
     </div>
   </div>
@@ -621,6 +624,14 @@
 const UPI_ID = "vanajasreeram.1976@okhdfcbank";
 const UPI_NAME = "vanaja v";
    const menuItems = [
+     {
+    id: 0,
+    name: "Test Payment (₹1)",
+    category: "Snacks",
+    price: 1,
+    description: "Use this item to test UPI payments safely.",
+    image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/1.jpg"
+  },
   { id: 1, name: "Curd Chilli", category: "Snacks", price: 220, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/1.jpg" },
   { id: 2, name: "Karuvadam Basket", category: "Snacks", price: 240, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg" },
   { id: 3, name: "Avakaya Mango Pickle", category: "Meals", price: 260, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/5.jpg" },
@@ -874,6 +885,22 @@ const UPI_NAME = "vanaja v";
 
 /* ✅ ADD HERE (NOT BELOW placeOrder) */
 function startUPIPayment() {
+
+  function payWithApp(app) {
+  const amount = getCartTotal();
+
+  let url = "";
+
+  if (app === "gpay") {
+    url = `tez://upi/pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
+  }
+
+  if (app === "phonepe") {
+    url = `phonepe://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
+  }
+
+  window.location.href = url;
+}
   if (!cart.length) return;
 
   const formData = new FormData(checkoutForm);
