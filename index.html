@@ -595,7 +595,6 @@
           <textarea name="notes" placeholder="Add any delivery notes or preferences"></textarea>
         </label>
         <button class="submit-btn" id="payNowBtn" type="button">Pay Now</button>
-        <button class="ghost-btn" type="submit">Place Order</button>
       </form>
     </div>
   </div>
@@ -614,10 +613,13 @@
       <button class="submit-btn" id="continueBrowsingBtn" type="button">Continue Browsing</button>
     </div>
   </div>
+<!--   <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
 
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
-    const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
+   const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
+
+const UPI_ID = "pssudharsansreeram@okicici";
+const UPI_NAME = "PS SUDHARSAN";
    const menuItems = [
   { id: 1, name: "Curd Chilli", category: "Snacks", price: 220, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/1.jpg" },
   { id: 2, name: "Karuvadam Basket", category: "Snacks", price: 240, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg" },
@@ -855,99 +857,64 @@
     }
 
     function finalizeOrder(order) {
-      orders.push(order);
-      saveState(STORAGE_KEYS.orders, orders);
-      cart = [];
-      saveState(STORAGE_KEYS.cart, cart);
+  orders.push(order);
+  saveState(STORAGE_KEYS.orders, orders);
+  cart = [];
+  saveState(STORAGE_KEYS.cart, cart);
 
-      checkoutForm.reset();
-      renderCart();
-      renderOrders();
-      closeCheckout();
-      closeCart();
-      openConfirmation(order);
-      adminPanel.classList.add("visible");
-      adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
+  checkoutForm.reset();
+  renderCart();
+  renderOrders();
+  closeCheckout();
+  closeCart();
+  openConfirmation(order);
+  adminPanel.classList.add("visible");
+  adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
-   function startRazorpayPayment() {
+/* ✅ ADD HERE (NOT BELOW placeOrder) */
+function startUPIPayment() {
   if (!cart.length) return;
 
   const formData = new FormData(checkoutForm);
-  const customerName = formData.get("name").toString().trim();
-  const customerPhone = formData.get("phone").toString().trim();
-  const customerAddress = formData.get("address").toString().trim();
+  const name = formData.get("name").toString().trim();
+  const phone = formData.get("phone").toString().trim();
+  const address = formData.get("address").toString().trim();
 
-  if (!customerName || !customerPhone || !customerAddress) {
+  if (!name || !phone || !address) {
     checkoutForm.reportValidity();
     return;
   }
 
-  if (typeof Razorpay === "undefined") {
-    alert("Razorpay failed to load. Try again.");
+  const amount = getCartTotal();
+
+  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
+
+  window.location.href = upiLink;
+
+  // show alert only (no auto order)
+  alert("Complete payment in your UPI app.\nThen click Pay Now again to confirm.");
+}
+
+/* ⛔ THIS COMES AFTER */
+function placeOrder(event) {
+  event.preventDefault();
+  alert("Please pay first using Pay Now");
+}
+
+function toggleAdminPanel() {
+  const password = prompt("Enter Admin Password:");
+
+  if (password !== "1976") {
+    alert("Wrong password");
     return;
   }
 
-  const totalAmount = getCartTotal();
-  const orderDraft = buildOrder(formData, "paid");
-
-  const options = {
-    key: "rzp_live_xxxxxxxxxx", // your key
-    amount: totalAmount * 100,
-    currency: "INR",
-    name: "IYERVAL FOODS",
-    description: "Order Payment",
-
-    handler: function (response) {
-      orderDraft.paymentStatus = "paid";
-      orderDraft.razorpayPaymentId = response.razorpay_payment_id || "";
-      finalizeOrder(orderDraft);
-      alert("Payment successful!");
-    },
-
-    prefill: {
-      name: customerName,
-      contact: customerPhone
-    },
-
-    theme: {
-      color: "#ff8c00"
-    },
-
-    modal: {
-      ondismiss: function () {
-        alert("Payment cancelled");
-      }
-    }
-  };
-
-  const razorpay = new Razorpay(options);
-  razorpay.open();
+  adminPanel.classList.toggle("visible");
+  renderOrders();
 }
 
-    function placeOrder(event) {
-      event.preventDefault();
-      if (!cart.length) return;
-      const formData = new FormData(checkoutForm);
-      const order = buildOrder(formData, "unpaid");
-
-      if (!order.name || !order.phone || !order.address) {
-        checkoutForm.reportValidity();
-        return;
-      }
-
-      finalizeOrder(order);
-    }
-
-    function toggleAdminPanel() {
-      adminPanel.classList.toggle("visible");
-      renderOrders();
-      if (adminPanel.classList.contains("visible")) {
-        adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
-    }
-
-    function setupRevealAnimations() {
+function setupRevealAnimations() {
       const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
@@ -987,7 +954,7 @@
       closeCheckoutBtn.addEventListener("click", closeCheckout);
       closeConfirmationBtn.addEventListener("click", closeConfirmation);
       continueBrowsingBtn.addEventListener("click", closeConfirmation);
-      payNowBtn.addEventListener("click", startRazorpayPayment);
+      payNowBtn.addEventListener("click", startUPIPayment);
       checkoutForm.addEventListener("submit", placeOrder);
       adminToggleBtn.addEventListener("click", toggleAdminPanel);
       refreshOrdersBtn.addEventListener("click", renderOrders);
@@ -1029,7 +996,6 @@
   </script>
 </body>
 </html>
-
 
 
 
