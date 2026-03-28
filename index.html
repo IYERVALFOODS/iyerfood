@@ -35,7 +35,7 @@
     body.menu-open, body.cart-open, body.modal-open { overflow: hidden; }
     a { color: inherit; text-decoration: none; }
     img { display: block; max-width: 100%; }
-    button, input, textarea { font: inherit; }
+    button, input, textarea, select { font: inherit; }
 
     .loading-screen {
       position: fixed; inset: 0; display: grid; place-items: center; z-index: 1200;
@@ -72,20 +72,9 @@
     }
 
     .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
-    .nav-links a,
-    .nav-actions button,
-    .hero-actions button,
-    .filter-btn,
-    .menu-card button,
-    .panel-btn,
-    .checkout-btn,
-    .close-btn,
-    .quantity-btn,
-    .remove-btn,
-    .submit-btn {
-      transition: transform var(--ease), background var(--ease), border-color var(--ease), color var(--ease), box-shadow var(--ease), opacity var(--ease);
+    .nav-links a {
+      font-size: 0.96rem; color: rgba(248, 245, 239, 0.84); position: relative;
     }
-    .nav-links a { font-size: 0.96rem; color: rgba(248, 245, 239, 0.84); position: relative; }
     .nav-links a::after {
       content: ""; position: absolute; left: 0; bottom: -0.5rem; width: 100%; height: 2px;
       background: linear-gradient(90deg, var(--accent), transparent);
@@ -111,11 +100,6 @@
     }
     .ghost-btn, .panel-btn, .filter-btn, .close-btn, .quantity-btn, .remove-btn {
       background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border); color: var(--text);
-    }
-    .hamburger { display: none; width: 48px; height: 48px; border-radius: 16px; }
-    .hamburger span {
-      display: block; width: 18px; height: 2px; background: var(--text); margin: 3px auto;
-      transition: transform var(--ease), opacity var(--ease);
     }
     .cart-count {
       position: absolute; right: -4px; top: -4px; min-width: 22px; height: 22px; padding: 0 0.35rem;
@@ -249,6 +233,19 @@
     .menu-card p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
     .menu-card button { width: 100%; padding: 0.95rem 1rem; border-radius: 16px; cursor: pointer; }
 
+    .weight-select {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0.5rem;
+      color: var(--text);
+      font-size: 0.85rem;
+      margin-bottom: 0.5rem;
+      width: 100%;
+      cursor: pointer;
+    }
+    .weight-select option { background: #1a1a1a; }
+
     .contact-card, .admin-panel, .confirmation-card { padding: 2rem; }
     .contact-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
     .contact-card p, .contact-card a, .admin-panel p, .confirmation-card p { color: var(--muted); line-height: 1.8; }
@@ -321,11 +318,11 @@
     .modal-top { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
     .checkout-form { display: grid; gap: 0.95rem; }
     .checkout-form label { display: grid; gap: 0.45rem; font-size: 0.94rem; color: var(--muted); }
-    .checkout-form input, .checkout-form textarea {
+    .checkout-form input, .checkout-form textarea, .checkout-form select {
       width: 100%; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.06); color: var(--text); padding: 0.95rem 1rem; resize: vertical; min-height: 54px;
+      background: rgba(255, 255, 255, 0.06); color: var(--text); padding: 0.95rem 1rem; resize: vertical;
     }
-    .checkout-form textarea { min-height: 120px; }
+    .checkout-form textarea { min-height: 100px; }
     .checkout-summary, .confirmation-summary {
       border-radius: 20px; padding: 1rem; background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08); display: grid; gap: 0.75rem;
@@ -353,15 +350,7 @@
       .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; }
       .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
       .hero-card { justify-self: start; }
-      .nav-links {
-        position: fixed; inset: var(--nav-h) 1rem auto; flex-direction: column; align-items: stretch; padding: 1rem;
-        border-radius: 24px; background: rgba(13, 13, 13, 0.96); border: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: var(--shadow); transform: translateY(-16px); opacity: 0; pointer-events: none;
-      }
-      .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
-      .hamburger { display: inline-grid; place-items: center; }
     }
-
     @media (max-width: 720px) {
       :root { --container: min(100vw - 1.2rem, 1180px); }
       .brand-copy span, .ghost-btn span { display: none; }
@@ -375,486 +364,202 @@
   </style>
 </head>
 <body>
-  <div class="loading-screen" id="loadingScreen" aria-hidden="true">
-    <div class="loading-mark">
-      <div class="loading-ring"></div>
-      <span>Preparing your table</span>
-    </div>
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-mark"><div class="loading-ring"></div><span>Preparing your table</span></div>
   </div>
 
   <header class="navbar">
     <div class="container nav-inner">
-      <a class="brand" href="#home" aria-label="IYERVAL FOODS home">
-        <img src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="IYERVAL FOODS logo" />
-        <div class="brand-copy">
-          <strong>IYERVAL FOODS</strong>
-          <span>Authentic Taste. Pure Tradition.</span>
-        </div>
-      </a>
-
-      <nav aria-label="Primary navigation">
-        <ul class="nav-links" id="navLinks">
-          <li><a href="#home">Home</a></li>
-          <li><a href="#menu">Menu</a></li>
-          <li><a href="#about">About</a></li>
-          <li><a href="#contact">Contact</a></li>
-        </ul>
-      </nav>
-
+      <a class="brand" href="#home"><img src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="logo"><div class="brand-copy"><strong>IYERVAL FOODS</strong><span>Authentic Taste. Pure Tradition.</span></div></a>
+      <nav><ul class="nav-links" id="navLinks"><li><a href="#home">Home</a></li><li><a href="#menu">Menu</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></nav>
       <div class="nav-actions">
-  <button class="ghost-btn" id="adminToggleBtn" type="button">Admin Orders</button>
-  <img class="nav-mini-logo" 
-       src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/2.png" 
-       alt="IYERVAL FOODS mini logo" />
-  <button class="icon-btn" id="navCartBtn" type="button" aria-label="Open cart">
-    <span aria-hidden="true">Cart</span>
-    <span class="cart-count" id="navCartCount">0</span>
-  </button> 
-</div>
+        <button class="ghost-btn" id="adminToggleBtn">Admin Orders</button>
+        <img class="nav-mini-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/2.png" alt="mini logo">
+        <button class="icon-btn" id="navCartBtn"><span>Cart</span><span class="cart-count" id="navCartCount">0</span></button>
+      </div>
     </div>
   </header>
 
-  <button class="cart-fab" id="cartFab" type="button" aria-label="Open cart">
-    <strong>Cart</strong>
-    <span class="highlight" id="fabCartLabel">0 items</span>
-  </button>
+  <button class="cart-fab" id="cartFab"><strong>Cart</strong><span class="highlight" id="fabCartLabel">0 items</span></button>
 
   <main>
     <section class="hero" id="home">
       <div class="container hero-grid">
-        <div class="hero-copy">
-          <img class="hero-main-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="IYERVAL FOODS main logo" />
-          <span class="eyebrow">Premium South Indian Pantry & Kitchen</span>
-          <h1>Tradition, plated <span>for today.</span></h1>
-          <p>
-            Browse curated signature products from IYERVAL FOODS, add your favourites to cart,
-            and place your order in a smooth premium flow that saves every customer detail and order record.
-          </p>
-          <div class="hero-actions">
-            <button class="solid-btn" type="button" data-scroll="#menu">Order Now</button>
-            <button class="ghost-btn" type="button" data-scroll="#about">Discover the Story</button>
-          </div>
-        </div>
-
-        <aside class="hero-card" aria-label="Featured menu preview">
-          <div class="hero-card-media"></div>
-          <div class="hero-card-content">
-            <small>Chef's Board</small>
-            <strong>Curd Chilli, Vadam, Pickles & More</strong>
-            <p>Small-batch flavours with a modern storefront, a persistent cart, and an admin-ready order dashboard.</p>
-          </div>
-        </aside>
+        <div class="hero-copy"><img class="hero-main-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="logo"><span class="eyebrow">Premium South Indian Pantry & Kitchen</span><h1>Tradition, plated <span>for today.</span></h1><p>Browse curated signature products, add favourites, and complete your order with a secure payment flow. Only after successful payment your order is saved.</p><div class="hero-actions"><button class="solid-btn" data-scroll="#menu">Order Now</button><button class="ghost-btn" data-scroll="#about">Discover Story</button></div></div>
+        <aside class="hero-card"><div class="hero-card-media"></div><div class="hero-card-content"><small>Chef's Board</small><strong>Curd Chilli, Vadam, Pickles & More</strong><p>Weight-based pricing, UPI deep links, and a manual “I Have Paid” button ensure you only pay once.</p></div></aside>
       </div>
     </section>
 
-    <section class="reveal" id="about">
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">About</span>
-          <h2>Rooted in heritage, served with polish.</h2>
-          <p>
-            IYERVAL FOODS blends authentic recipes with a contemporary ordering experience, giving guests a clean,
-            premium way to explore products, customise quantities, and place orders that stay safely stored.
-          </p>
-        </div>
+    <section class="reveal" id="about"><div class="container"><div class="section-head"><span class="eyebrow">About</span><h2>Rooted in heritage, served with polish.</h2><p>IYERVAL FOODS blends authentic recipes with weight‑based pricing and a secure ordering flow that never auto‑places orders. Payments are manual – you click “I Have Paid” after finishing payment.</p></div><div class="about-grid"><div class="about-copy"><p>This storefront features weight selection (100g to 1kg), a ₹1 test product for payment trials, and a password‑protected admin panel. All orders are stored locally and can be exported to CSV or shared via WhatsApp.</p><div class="about-points"><article><strong>Secure Payments</strong><span>UPI deep links open your payment app; order is placed only after you confirm payment.</span></article><article><strong>Weight‑Based Pricing</strong><span>Prices update instantly when you change weight.</span></article><article><strong>Admin Tools</strong><span>Export orders, share via WhatsApp, and view order history (password: 1976).</span></article></div></div><div class="about-media" aria-hidden="true"></div></div></div></section>
 
-        <div class="about-grid">
-          <div class="about-copy">
-            <p>
-              This storefront is built for discovery and repeat ordering. Guests can filter items by category,
-              manage quantities from a whoosh-style slide-in cart, and complete checkout with name, phone, address,
-              and optional notes. Orders are stored locally so the experience remains fast and simple.
-            </p>
-            <div class="about-points">
-              <article><strong>Premium Flow</strong><span>Glassmorphism panels, rounded surfaces, smooth reveal animation, and responsive layout.</span></article>
-              <article><strong>Reliable Ordering</strong><span>Cart state and order history are saved in <code>localStorage</code> for continuity.</span></article>
-              <article><strong>Admin Ready</strong><span>Hidden order board shows customer details, ordered items, totals, and timestamps.</span></article>
-              <article><strong>Very Healthy</strong><span>WE HAVE NOT ADDED ANY PRESERVATIVES OR ANY OTHER CHEMICAL.</span></article>
-            </div>
-          </div>
-          <div class="about-media" aria-hidden="true"></div>
-        </div>
-      </div>
-    </section>
+    <section class="reveal" id="menu"><div class="container"><div class="section-head"><span class="eyebrow">Menu</span><h2>Curated for every craving.</h2><p>Choose weight, see updated price, and add to cart. A test product (₹1) is available for payment testing.</p></div><div class="filter-row" id="filterRow"><button class="filter-btn active" data-filter="All">All</button><button class="filter-btn" data-filter="Meals">Meals</button><button class="filter-btn" data-filter="Snacks">Snacks</button><button class="filter-btn" data-filter="Drinks">Drinks</button></div><div class="menu-grid" id="menuGrid"></div></div></section>
 
-    <section class="reveal" id="menu">
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Menu</span>
-          <h2>Curated for every craving.</h2>
-          <p>Filter the collection, explore signature products, and add items to your cart in a single click.</p>
-        </div>
-
-        <div class="filter-row" id="filterRow">
-          <button class="filter-btn active" type="button" data-filter="All">All</button>
-          <button class="filter-btn" type="button" data-filter="Meals">Meals</button>
-          <button class="filter-btn" type="button" data-filter="Snacks">Snacks</button>
-          <button class="filter-btn" type="button" data-filter="Drinks">Drinks</button>
-        </div>
-
-        <div class="menu-grid" id="menuGrid" aria-live="polite"></div>
-      </div>
-    </section>
-
-    <section class="reveal" id="contact">
-      <div class="container">
-        <div class="section-head">
-          <span class="eyebrow">Contact</span>
-          <h2>Every order captured, every detail ready.</h2>
-          <p>
-            The checkout flow stores customer name, phone, address, notes, selected items, total amount, and timestamp.
-            Admin view is hidden by default and can be opened from the button in the navigation.
-          </p>
-        </div>
-
-        <div class="contact-grid">
-          <div class="contact-card"><strong>Ordering</strong><p>Choose products, adjust quantities in the cart, then complete checkout with your delivery details.</p></div>
-          <div class="contact-card"><strong>Storage</strong><p>Cart is saved as <code>iyerval-cart</code> and orders are saved as <code>orders</code> in localStorage.</p></div>
-          <div class="contact-card"><strong>Admin Access</strong><p>Use the <code>Admin Orders</code> button to reveal the stored order board at the bottom of this page.</p></div>
-        </div>
-
-        <div class="admin-panel" id="adminPanel">
-          <div class="cart-head-row">
-            <div>
-              <span class="eyebrow">Hidden Admin View</span>
-              <h3 style="margin-top: 0.4rem;">Stored Orders</h3>
-            </div>
-            <button class="panel-btn" id="refreshOrdersBtn" type="button">Refresh Orders</button>
-          </div>
-          <p>Every placed order is shown here with customer information, purchased items, total, and recorded time.</p>
-          <div class="orders-grid" id="ordersGrid"></div>
-        </div>
-      </div>
-    </section>
+    <section class="reveal" id="contact"><div class="container"><div class="section-head"><span class="eyebrow">Contact</span><h2>Every order captured, every detail ready.</h2><p>Admin panel requires password (1976). You can export orders as CSV or share them via WhatsApp.</p></div><div class="contact-grid"><div class="contact-card"><strong>Ordering</strong><p>Select weight, add to cart, checkout, pay via UPI, then click “I Have Paid” to finalise.</p></div><div class="contact-card"><strong>Storage</strong><p>Cart and orders stored in localStorage. Admin panel accessible only with correct password.</p></div><div class="contact-card"><strong>Admin Access</strong><p>Use the <code>Admin Orders</code> button, enter <code>1976</code>, then export or share orders.</p></div></div>
+      <div class="admin-panel" id="adminPanel"><div class="cart-head-row"><div><span class="eyebrow">Hidden Admin View</span><h3 style="margin-top:0.4rem">Stored Orders</h3></div><div><button class="panel-btn" id="refreshOrdersBtn">Refresh</button><button class="panel-btn" id="exportCSVBtn">Export CSV</button><button class="panel-btn" id="shareWhatsAppBtn">Share via WhatsApp</button></div></div><p>Every placed order is shown here with customer details, items, total, and timestamp.</p><div class="orders-grid" id="ordersGrid"></div></div></div></section>
   </main>
 
-  <footer class="footer">
-    <div class="container footer-inner">
-      <span>IYERVAL FOODS premium ordering website</span>
-      <span>Built with HTML, CSS, and JavaScript only</span>
-    </div>
-  </footer>
+  <footer class="footer"><div class="container footer-inner"><span>IYERVAL FOODS premium ordering website</span><span>Built with HTML, CSS, and JavaScript only</span></div></footer>
 
   <div class="backdrop" id="backdrop"></div>
 
-  <aside class="cart-panel" id="cartPanel" aria-label="Shopping cart">
-    <div class="cart-header">
-      <div class="cart-head-row">
-        <div>
-          <span class="eyebrow">Your Cart</span>
-          <h3 style="margin-top: 0.45rem;">Freshly selected favourites</h3>
-        </div>
-        <button class="close-btn" id="closeCartBtn" type="button">Close</button>
-      </div>
-    </div>
-    <div class="cart-body" id="cartItemsContainer">
-      <p class="cart-empty">Your cart is empty. Add a few signature items to begin.</p>
-    </div>
-    <div class="cart-footer">
-      <div class="cart-total">
-        <span>Total</span>
-        <strong class="highlight" id="cartTotal">Rs.0.00</strong>
-      </div>
-      <p class="cart-note">Orders are captured locally along with customer details for later admin review.</p>
-      <button class="checkout-btn" id="checkoutBtn" type="button">Checkout</button>
-    </div>
-  </aside>
+  <aside class="cart-panel" id="cartPanel"><div class="cart-header"><div class="cart-head-row"><div><span class="eyebrow">Your Cart</span><h3>Freshly selected favourites</h3></div><button class="close-btn" id="closeCartBtn">Close</button></div></div><div class="cart-body" id="cartItemsContainer"><p class="cart-empty">Your cart is empty.</p></div><div class="cart-footer"><div class="cart-total"><span>Total</span><strong class="highlight" id="cartTotal">Rs.0.00</strong></div><button class="checkout-btn" id="checkoutBtn">Checkout</button></div></aside>
 
-  <div class="modal" id="checkoutModal" aria-hidden="true">
-    <div class="modal-card">
-      <div class="modal-top">
-        <div>
-          <span class="eyebrow">Checkout</span>
-          <h3 style="margin-top: 0.45rem;">Delivery details</h3>
-        </div>
-        <button class="close-btn" id="closeCheckoutBtn" type="button">Close</button>
-      </div>
-      <div class="checkout-summary">
-        <h4>Order summary</h4>
-        <ul class="summary-list" id="checkoutSummaryList"></ul>
-        <div class="summary-foot">
-          <span>Total</span>
-          <span id="checkoutSummaryTotal">Rs.0.00</span>
-        </div>
-      </div>
-      <form class="checkout-form" id="checkoutForm">
-        <label>
-          Name *
-          <input type="text" name="name" placeholder="Enter your full name" required />
-        </label>
-        <label>
-          Phone Number *
-          <input type="tel" name="phone" placeholder="Enter your phone number" required />
-        </label>
-        <label>
-          Address *
-          <textarea name="address" placeholder="Enter full delivery address" required></textarea>
-        </label>
-        <label>
-          Notes
-          <textarea name="notes" placeholder="Add any delivery notes or preferences"></textarea>
-        </label>
-        <button class="submit-btn" id="payNowBtn" type="button">Pay via UPI</button>
+  <div class="modal" id="checkoutModal"><div class="modal-card"><div class="modal-top"><div><span class="eyebrow">Checkout</span><h3>Delivery details</h3></div><button class="close-btn" id="closeCheckoutBtn">Close</button></div><div class="checkout-summary"><h4>Order summary</h4><ul class="summary-list" id="checkoutSummaryList"></ul><div class="summary-foot"><span>Total</span><span id="checkoutSummaryTotal">Rs.0.00</span></div></div><form class="checkout-form" id="checkoutForm"><label>Name *<input type="text" name="name" placeholder="Full name" required></label><label>Phone *<input type="tel" name="phone" placeholder="Phone number" required></label><label>Address *<textarea name="address" placeholder="Full delivery address" required></textarea></label><label>Notes<textarea name="notes" placeholder="Any special instructions"></textarea></label><button class="submit-btn" id="payNowBtn" type="button">Pay via UPI</button><button type="button" onclick="payWithApp('gpay')" class="ghost-btn">Open GPay</button><button type="button" onclick="payWithApp('phonepe')" class="ghost-btn">Open PhonePe</button><button type="button" id="confirmPaymentBtn" class="solid-btn" style="background: #2c7a2c;">✅ I Have Paid – Place Order</button></form></div></div>
 
-<button type="button" onclick="payWithApp('gpay')" class="ghost-btn">Open GPay</button>
-<button type="button" onclick="payWithApp('phonepe')" class="ghost-btn">Open PhonePe</button>
-      </form>
-    </div>
-  </div>
-
-  <div class="modal" id="confirmationModal" aria-hidden="true">
-    <div class="modal-card confirmation-card">
-      <div class="modal-top">
-        <div>
-          <span class="eyebrow">Order Confirmed</span>
-          <h3 style="margin-top: 0.45rem;">Order Placed Successfully</h3>
-        </div>
-        <button class="close-btn" id="closeConfirmationBtn" type="button">Close</button>
-      </div>
-      <p>Your order has been saved successfully. The summary below is stored in the admin order board as well.</p>
-      <div class="confirmation-summary" id="confirmationSummary"></div>
-      <button class="submit-btn" id="continueBrowsingBtn" type="button">Continue Browsing</button>
-    </div>
-  </div>
-<!--   <script src="https://checkout.razorpay.com/v1/checkout.js"></script> -->
+  <div class="modal" id="confirmationModal"><div class="modal-card confirmation-card"><div class="modal-top"><div><span class="eyebrow">Order Confirmed</span><h3>Order Placed Successfully</h3></div><button class="close-btn" id="closeConfirmationBtn">Close</button></div><p>Your order has been saved. It is now visible in the admin panel.</p><div class="confirmation-summary" id="confirmationSummary"></div><button class="submit-btn" id="continueBrowsingBtn">Continue Browsing</button></div></div>
 
   <script>
-   const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
-   
-   const UPI_ID = "vanajasreeram.1976@okhdfcbank";
-   const UPI_NAME = "SUDHARSAN P S";
+    const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
+    const UPI_ID = "vanajasreeram.1976@okhdfcbank";
+    const UPI_NAME = "SUDHARSAN P S";
+    const ADMIN_PASS = "1976";
 
-    
+    // Weight options & price multipliers (base price per 100g)
+    const weights = [
+      { label: "100g", multiplier: 1 },
+      { label: "200g", multiplier: 2 },
+      { label: "500g", multiplier: 5 },
+      { label: "1kg", multiplier: 10 }
+    ];
+
     const menuItems = [
-  { id: 1, name: "Curd Chilli", category: "Snacks", price: 220, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/1.jpg" },
-  { id: 2, name: "Karuvadam Basket", category: "Snacks", price: 240, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg" },
-  { id: 3, name: "Avakaya Mango Pickle", category: "Meals", price: 260, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/5.jpg" },
-  { id: 4, name: "Vadam Selection", category: "Snacks", price: 210, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/4.jpg" }
-];
+      { id: 1, name: "Curd Chilli", category: "Snacks", basePrice: 22, description: "Tangy and spicy curd chillies", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/1.jpg" },
+      { id: 2, name: "Karuvadam Basket", category: "Snacks", basePrice: 24, description: "Crispy traditional rice vadam", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg" },
+      { id: 3, name: "Avakaya Mango Pickle", category: "Meals", basePrice: 26, description: "Authentic Andhra style pickle", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/5.jpg" },
+      { id: 4, name: "Vadam Selection", category: "Snacks", basePrice: 21, description: "Assorted vadam mix", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/4.jpg" },
+      { id: 5, name: "Test Product (₹1)", category: "Drinks", basePrice: 0.1, description: "For testing payment flow – only ₹1", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" }
+    ];
 
     let selectedFilter = "All";
     let cart = loadState(STORAGE_KEYS.cart, []);
     let orders = loadState(STORAGE_KEYS.orders, []);
+    let pendingOrderData = null; // store form data and cart snapshot before payment
 
-    const menuGrid = document.getElementById("menuGrid");
-    const navLinks = document.getElementById("navLinks");
-    const hamburgerBtn = document.getElementById("hamburgerBtn");
-    const adminToggleBtn = document.getElementById("adminToggleBtn");
-    const adminPanel = document.getElementById("adminPanel");
-    const ordersGrid = document.getElementById("ordersGrid");
-    const refreshOrdersBtn = document.getElementById("refreshOrdersBtn");
-    const cartFab = document.getElementById("cartFab");
-    const navCartBtn = document.getElementById("navCartBtn");
-    const navCartCount = document.getElementById("navCartCount");
-    const fabCartLabel = document.getElementById("fabCartLabel");
-    const cartPanel = document.getElementById("cartPanel");
-    const cartItemsContainer = document.getElementById("cartItemsContainer");
-    const cartTotal = document.getElementById("cartTotal");
-    const checkoutBtn = document.getElementById("checkoutBtn");
-    const closeCartBtn = document.getElementById("closeCartBtn");
-    const backdrop = document.getElementById("backdrop");
-    const checkoutModal = document.getElementById("checkoutModal");
-    const closeCheckoutBtn = document.getElementById("closeCheckoutBtn");
-    const checkoutForm = document.getElementById("checkoutForm");
-    const payNowBtn = document.getElementById("payNowBtn");
-    const checkoutSummaryList = document.getElementById("checkoutSummaryList");
-    const checkoutSummaryTotal = document.getElementById("checkoutSummaryTotal");
-    const confirmationModal = document.getElementById("confirmationModal");
-    const closeConfirmationBtn = document.getElementById("closeConfirmationBtn");
-    const continueBrowsingBtn = document.getElementById("continueBrowsingBtn");
-    const confirmationSummary = document.getElementById("confirmationSummary");
-    const loadingScreen = document.getElementById("loadingScreen");
+    const dom = {
+      menuGrid: document.getElementById("menuGrid"),
+      navLinks: document.getElementById("navLinks"),
+      adminToggleBtn: document.getElementById("adminToggleBtn"),
+      adminPanel: document.getElementById("adminPanel"),
+      ordersGrid: document.getElementById("ordersGrid"),
+      refreshOrdersBtn: document.getElementById("refreshOrdersBtn"),
+      exportCSVBtn: document.getElementById("exportCSVBtn"),
+      shareWhatsAppBtn: document.getElementById("shareWhatsAppBtn"),
+      cartFab: document.getElementById("cartFab"),
+      navCartBtn: document.getElementById("navCartBtn"),
+      navCartCount: document.getElementById("navCartCount"),
+      fabCartLabel: document.getElementById("fabCartLabel"),
+      cartPanel: document.getElementById("cartPanel"),
+      cartItemsContainer: document.getElementById("cartItemsContainer"),
+      cartTotal: document.getElementById("cartTotal"),
+      checkoutBtn: document.getElementById("checkoutBtn"),
+      closeCartBtn: document.getElementById("closeCartBtn"),
+      backdrop: document.getElementById("backdrop"),
+      checkoutModal: document.getElementById("checkoutModal"),
+      closeCheckoutBtn: document.getElementById("closeCheckoutBtn"),
+      checkoutForm: document.getElementById("checkoutForm"),
+      payNowBtn: document.getElementById("payNowBtn"),
+      confirmPaymentBtn: document.getElementById("confirmPaymentBtn"),
+      checkoutSummaryList: document.getElementById("checkoutSummaryList"),
+      checkoutSummaryTotal: document.getElementById("checkoutSummaryTotal"),
+      confirmationModal: document.getElementById("confirmationModal"),
+      closeConfirmationBtn: document.getElementById("closeConfirmationBtn"),
+      continueBrowsingBtn: document.getElementById("continueBrowsingBtn"),
+      confirmationSummary: document.getElementById("confirmationSummary"),
+      loadingScreen: document.getElementById("loadingScreen"),
+    };
 
-    function loadState(key, fallback) {
-      try {
-        const raw = localStorage.getItem(key);
-        return raw ? JSON.parse(raw) : fallback;
-      } catch (error) {
-        console.warn("Storage load failed:", error);
-        return fallback;
-      }
-    }
-
+    function loadState(key, fallback) { try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch(e) { return fallback; } }
     function saveState(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
     function formatCurrency(value) { return `Rs.${Number(value).toFixed(2)}`; }
     function formatDate(timestamp) { return new Date(timestamp).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }); }
     function getCartCount() { return cart.reduce((sum, item) => sum + item.quantity, 0); }
-    function getCartTotal() { return cart.reduce((sum, item) => sum + item.price * item.quantity, 0); }
+    function getCartTotal() { return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0); }
 
     function renderMenu() {
-      const filtered = selectedFilter === "All" ? menuItems : menuItems.filter((item) => item.category === selectedFilter);
-      menuGrid.innerHTML = filtered.map((item) => `
-        <article class="menu-card reveal visible">
-          <div class="menu-card-media">
-            <img src="${item.image}" alt="${item.name}" loading="lazy" />
-            <span class="menu-tag">${item.category}</span>
-          </div>
-          <div class="menu-card-body">
-            <div class="menu-card-top">
-              <h3>${item.name}</h3>
-              <span class="price">${formatCurrency(item.price)}</span>
-            </div>
-            <p>${item.description}</p>
-            <button type="button" data-id="${item.id}">Add to Cart</button>
-          </div>
-        </article>
-      `).join("");
+      const filtered = selectedFilter === "All" ? menuItems : menuItems.filter(i => i.category === selectedFilter);
+      dom.menuGrid.innerHTML = filtered.map(item => {
+        const currentPrice = (item.basePrice * 10).toFixed(2); // basePrice per 100g, show price for 100g
+        return `<article class="menu-card"><div class="menu-card-media"><img src="${item.image}" alt="${item.name}" loading="lazy"><span class="menu-tag">${item.category}</span></div><div class="menu-card-body"><div class="menu-card-top"><h3>${item.name}</h3><span class="price">${formatCurrency(currentPrice)}</span></div><p>${item.description}</p><select class="weight-select" data-id="${item.id}" data-base="${item.basePrice}">${weights.map(w => `<option value="${w.multiplier}">${w.label} (${formatCurrency(item.basePrice * w.multiplier * 10)})</option>`).join("")}</select><button data-id="${item.id}" data-weight-multiplier="1">Add to Cart</button></div></article>`;
+      }).join("");
+      // Attach weight change event after rendering
+      document.querySelectorAll(".weight-select").forEach(select => {
+        select.addEventListener("change", function() {
+          const mult = parseFloat(this.value);
+          const priceElem = this.closest(".menu-card").querySelector(".price");
+          const base = parseFloat(this.dataset.base);
+          const newPrice = base * mult * 10;
+          priceElem.textContent = formatCurrency(newPrice);
+          const addBtn = this.closest(".menu-card-body").querySelector("button");
+          addBtn.dataset.weightMultiplier = mult;
+        });
+        // trigger initial
+        select.dispatchEvent(new Event("change"));
+      });
     }
 
-    function renderCart() {
-      const total = getCartTotal();
-      const count = getCartCount();
-      navCartCount.textContent = count;
-      fabCartLabel.textContent = `${count} ${count === 1 ? "item" : "items"}`;
-      cartTotal.textContent = formatCurrency(total);
-      checkoutBtn.disabled = cart.length === 0;
-      checkoutBtn.style.opacity = cart.length === 0 ? "0.55" : "1";
-
-      if (!cart.length) {
-        cartItemsContainer.innerHTML = `<p class="cart-empty">Your cart is empty. Add a few signature items to begin.</p>`;
-        return;
-      }
-
-      cartItemsContainer.innerHTML = cart.map((item) => `
-        <article class="cart-item">
-          <div class="cart-item-head">
-            <div><strong>${item.name}</strong><div class="cart-item-price">${formatCurrency(item.price)}</div></div>
-            <button class="remove-btn" type="button" data-remove="${item.id}">Remove</button>
-          </div>
-          <div class="quantity-row">
-            <div class="quantity-controls">
-              <button class="quantity-btn" type="button" data-qty="${item.id}" data-change="-1">-</button>
-              <span>${item.quantity}</span>
-              <button class="quantity-btn" type="button" data-qty="${item.id}" data-change="1">+</button>
-            </div>
-            <strong>${formatCurrency(item.price * item.quantity)}</strong>
-          </div>
-        </article>
-      `).join("");
-    }
-
-    function renderCheckoutSummary() {
-      checkoutSummaryList.innerHTML = cart.map((item) => `
-        <li><span>${item.name} x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>
-      `).join("");
-      checkoutSummaryTotal.textContent = formatCurrency(getCartTotal());
-    }
-
-    function renderOrders() {
-      if (!orders.length) {
-        ordersGrid.innerHTML = `<article class="order-card"><strong>No orders yet</strong><p>Placed orders will appear here once checkout is completed.</p></article>`;
-        return;
-      }
-
-      ordersGrid.innerHTML = [...orders].reverse().map((order) => `
-        <article class="order-card">
-          <div class="order-meta"><div><strong>${order.name}</strong><span>${order.phone}</span></div><span>#${order.orderId}</span></div>
-          <p>${order.address}</p>
-          <ul class="order-items">
-            ${order.items.map((item) => `<li><span>${item.name} x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>`).join("")}
-          </ul>
-          ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}
-          <div class="order-meta"><span>${formatDate(order.timestamp)}</span><strong class="highlight">${formatCurrency(order.total)}</strong></div>
-        </article>
-      `).join("");
-    }
-
-    function addToCart(itemId) {
-      const item = menuItems.find((entry) => entry.id === Number(itemId));
+    function addToCart(itemId, weightMultiplier = 1) {
+      const item = menuItems.find(i => i.id === Number(itemId));
       if (!item) return;
-      const existing = cart.find((entry) => entry.id === item.id);
+      const finalPrice = item.basePrice * weightMultiplier * 10;
+      const existing = cart.find(i => i.id === item.id && i.weightMultiplier === weightMultiplier);
       if (existing) existing.quantity += 1;
-      else cart.push({ ...item, quantity: 1 });
+      else cart.push({ ...item, price: finalPrice, weightMultiplier, quantity: 1 });
       saveState(STORAGE_KEYS.cart, cart);
       renderCart();
       openCart();
     }
 
-    function updateQuantity(itemId, change) {
-      cart = cart
-        .map((item) => item.id === Number(itemId) ? { ...item, quantity: item.quantity + Number(change) } : item)
-        .filter((item) => item.quantity > 0);
+    function renderCart() {
+      const total = getCartTotal();
+      const count = getCartCount();
+      dom.navCartCount.textContent = count;
+      dom.fabCartLabel.textContent = `${count} ${count === 1 ? "item" : "items"}`;
+      dom.cartTotal.textContent = formatCurrency(total);
+      dom.checkoutBtn.disabled = cart.length === 0;
+      if (!cart.length) { dom.cartItemsContainer.innerHTML = `<p class="cart-empty">Your cart is empty.</p>`; return; }
+      dom.cartItemsContainer.innerHTML = cart.map(item => `<article class="cart-item"><div class="cart-item-head"><div><strong>${item.name} (${weights.find(w=>w.multiplier===item.weightMultiplier)?.label || "100g"})</strong><div class="cart-item-price">${formatCurrency(item.price)}</div></div><button class="remove-btn" data-remove="${item.id}_${item.weightMultiplier}">Remove</button></div><div class="quantity-row"><div class="quantity-controls"><button class="quantity-btn" data-qty="${item.id}_${item.weightMultiplier}" data-change="-1">-</button><span>${item.quantity}</span><button class="quantity-btn" data-qty="${item.id}_${item.weightMultiplier}" data-change="1">+</button></div><strong>${formatCurrency(item.price * item.quantity)}</strong></div></article>`).join("");
+    }
+
+    function updateQuantity(compositeId, change) {
+      const [id, weightMult] = compositeId.split("_");
+      const idx = cart.findIndex(i => i.id === Number(id) && i.weightMultiplier === parseFloat(weightMult));
+      if (idx === -1) return;
+      const newQty = cart[idx].quantity + Number(change);
+      if (newQty <= 0) cart.splice(idx, 1);
+      else cart[idx].quantity = newQty;
       saveState(STORAGE_KEYS.cart, cart);
       renderCart();
-      renderCheckoutSummary();
+      if (dom.checkoutModal.classList.contains("visible")) renderCheckoutSummary();
     }
 
-    function removeCartItem(itemId) {
-      cart = cart.filter((item) => item.id !== Number(itemId));
+    function removeCartItem(compositeId) {
+      const [id, weightMult] = compositeId.split("_");
+      cart = cart.filter(i => !(i.id === Number(id) && i.weightMultiplier === parseFloat(weightMult)));
       saveState(STORAGE_KEYS.cart, cart);
       renderCart();
-      renderCheckoutSummary();
+      if (dom.checkoutModal.classList.contains("visible")) renderCheckoutSummary();
     }
 
-    function openCart() {
-      cartPanel.classList.add("open");
-      backdrop.classList.add("visible");
-      document.body.classList.add("cart-open");
+    function renderCheckoutSummary() {
+      dom.checkoutSummaryList.innerHTML = cart.map(item => `<li><span>${item.name} (${weights.find(w=>w.multiplier===item.weightMultiplier)?.label}) x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>`).join("");
+      dom.checkoutSummaryTotal.textContent = formatCurrency(getCartTotal());
     }
 
-    function closeCart() {
-      cartPanel.classList.remove("open");
-      if (!checkoutModal.classList.contains("visible") && !confirmationModal.classList.contains("visible")) {
-        backdrop.classList.remove("visible");
-        document.body.classList.remove("cart-open");
-      }
+    function renderOrders() {
+      if (!orders.length) { dom.ordersGrid.innerHTML = `<article class="order-card"><strong>No orders yet</strong><p>Placed orders will appear here.</p></article>`; return; }
+      dom.ordersGrid.innerHTML = [...orders].reverse().map(order => `<article class="order-card"><div class="order-meta"><div><strong>${order.name}</strong><span>${order.phone}</span></div><span>#${order.orderId}</span></div><p>${order.address}</p><ul class="order-items">${order.items.map(it => `<li><span>${it.name} (${it.weightLabel}) x ${it.quantity}</span><span>${formatCurrency(it.price * it.quantity)}</span></li>`).join("")}</ul>${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}<div class="order-meta"><span>${formatDate(order.timestamp)}</span><strong class="highlight">${formatCurrency(order.total)}</strong></div></article>`).join("");
     }
 
-    function openCheckout() {
-      if (!cart.length) return;
-      renderCheckoutSummary();
-      checkoutModal.classList.add("visible");
-      checkoutModal.setAttribute("aria-hidden", "false");
-      backdrop.classList.add("visible");
-      document.body.classList.add("modal-open");
-    }
-
-    function closeCheckout() {
-      checkoutModal.classList.remove("visible");
-      checkoutModal.setAttribute("aria-hidden", "true");
-      if (!cartPanel.classList.contains("open") && !confirmationModal.classList.contains("visible")) {
-        backdrop.classList.remove("visible");
-        document.body.classList.remove("modal-open");
-      }
-    }
-
-    function openConfirmation(order) {
-      confirmationSummary.innerHTML = `
-        <div class="cart-head-row"><strong>Order ID</strong><span class="highlight">#${order.orderId}</span></div>
-        <p><strong>Name:</strong> ${order.name}</p>
-        <p><strong>Phone:</strong> ${order.phone}</p>
-        <p><strong>Address:</strong> ${order.address}</p>
-        ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}
-        <ul class="summary-list">
-          ${order.items.map((item) => `<li><span>${item.name} x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>`).join("")}
-        </ul>
-        <div class="summary-foot"><span>Total</span><span>${formatCurrency(order.total)}</span></div>
-        <p><strong>Timestamp:</strong> ${formatDate(order.timestamp)}</p>
-      `;
-      confirmationModal.classList.add("visible");
-      confirmationModal.setAttribute("aria-hidden", "false");
-      backdrop.classList.add("visible");
-      document.body.classList.add("modal-open");
-    }
-
-    function closeConfirmation() {
-      confirmationModal.classList.remove("visible");
-      confirmationModal.setAttribute("aria-hidden", "true");
-      if (!cartPanel.classList.contains("open") && !checkoutModal.classList.contains("visible")) {
-        backdrop.classList.remove("visible");
-        document.body.classList.remove("modal-open");
-      }
-    }
-
-    function buildOrder(formData, paymentStatus = "pending") {
+    function buildOrder(formData, paymentStatus = "paid") {
       const timestamp = Date.now();
+      const orderItems = cart.map(item => ({ ...item, weightLabel: weights.find(w=>w.multiplier===item.weightMultiplier)?.label || "100g" }));
       return {
         orderId: `IYF-${timestamp}`,
-        name: formData.get("name").toString().trim(),
-        phone: formData.get("phone").toString().trim(),
-        address: formData.get("address").toString().trim(),
-        notes: formData.get("notes").toString().trim(),
-        items: cart.map((item) => ({ id: item.id, name: item.name, price: item.price, quantity: item.quantity })),
+        name: formData.get("name").trim(),
+        phone: formData.get("phone").trim(),
+        address: formData.get("address").trim(),
+        notes: formData.get("notes").trim(),
+        items: orderItems,
         total: getCartTotal(),
         paymentStatus,
         timestamp
@@ -862,150 +567,90 @@
     }
 
     function finalizeOrder(order) {
-  orders.push(order);
-  saveState(STORAGE_KEYS.orders, orders);
-  cart = [];
-  saveState(STORAGE_KEYS.cart, cart);
+      orders.push(order);
+      saveState(STORAGE_KEYS.orders, orders);
+      cart = [];
+      saveState(STORAGE_KEYS.cart, cart);
+      dom.checkoutForm.reset();
+      renderCart();
+      renderOrders();
+      closeCheckout();
+      closeCart();
+      openConfirmation(order);
+      dom.adminPanel.classList.add("visible");
+      if (!dom.adminPanel.classList.contains("visible")) dom.adminPanel.classList.add("visible");
+    }
 
-  checkoutForm.reset();
-  renderCart();
-  renderOrders();
-  closeCheckout();
-  closeCart();
-  openConfirmation(order);
-  adminPanel.classList.add("visible");
-  adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
-}
+    function startUPIPayment() {
+      if (!cart.length) return;
+      const formData = new FormData(dom.checkoutForm);
+      const name = formData.get("name")?.trim();
+      const phone = formData.get("phone")?.trim();
+      const address = formData.get("address")?.trim();
+      if (!name || !phone || !address) { dom.checkoutForm.reportValidity(); return; }
+      const amount = getCartTotal();
+      const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
+      window.location.href = upiLink;
+      // Store pending order data for later confirmation
+      pendingOrderData = { formData: new FormData(dom.checkoutForm), cartSnapshot: [...cart] };
+    }
 
-/* ✅ ADD HERE (NOT BELOW placeOrder) */
-function startUPIPayment() {
-  if (!cart.length) return;
-
-  const formData = new FormData(checkoutForm);
-  const name = formData.get("name").toString().trim();
-  const phone = formData.get("phone").toString().trim();
-  const address = formData.get("address").toString().trim();
-
-  if (!name || !phone || !address) {
-    checkoutForm.reportValidity();
-    return;
-  }
-
-  const amount = getCartTotal();
-
-  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
-
-  // OPEN UPI APP
-  window.location.href = upiLink;
-
-  // CONFIRM AFTER PAYMENT
-  setTimeout(() => {
-    const confirmPay = confirm("Did you complete the payment?");
-    if (confirmPay) {
-      const order = buildOrder(formData, "paid");
+    function confirmAndPlaceOrder() {
+      if (!pendingOrderData) { alert("Please initiate payment first by clicking 'Pay via UPI'."); return; }
+      const order = buildOrder(pendingOrderData.formData, "paid");
       finalizeOrder(order);
+      pendingOrderData = null;
     }
-  }, 2000);
-}
-function placeOrder(event) {
-  event.preventDefault();
-  alert("Please pay first using Pay Now");
-}
 
-function toggleAdminPanel() {
-  const password = prompt("Enter Admin Password:");
+    function openCart() { dom.cartPanel.classList.add("open"); dom.backdrop.classList.add("visible"); document.body.classList.add("cart-open"); }
+    function closeCart() { dom.cartPanel.classList.remove("open"); if (!dom.checkoutModal.classList.contains("visible") && !dom.confirmationModal.classList.contains("visible")) { dom.backdrop.classList.remove("visible"); document.body.classList.remove("cart-open"); } }
+    function openCheckout() { if (!cart.length) return; renderCheckoutSummary(); dom.checkoutModal.classList.add("visible"); dom.checkoutModal.setAttribute("aria-hidden", "false"); dom.backdrop.classList.add("visible"); document.body.classList.add("modal-open"); }
+    function closeCheckout() { dom.checkoutModal.classList.remove("visible"); dom.checkoutModal.setAttribute("aria-hidden", "true"); if (!dom.cartPanel.classList.contains("open") && !dom.confirmationModal.classList.contains("visible")) { dom.backdrop.classList.remove("visible"); document.body.classList.remove("modal-open"); } pendingOrderData = null; }
+    function openConfirmation(order) { dom.confirmationSummary.innerHTML = `<div class="cart-head-row"><strong>Order ID</strong><span class="highlight">#${order.orderId}</span></div><p><strong>Name:</strong> ${order.name}</p><p><strong>Phone:</strong> ${order.phone}</p><p><strong>Address:</strong> ${order.address}</p>${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}<ul class="summary-list">${order.items.map(it => `<li><span>${it.name} (${it.weightLabel}) x ${it.quantity}</span><span>${formatCurrency(it.price * it.quantity)}</span></li>`).join("")}</ul><div class="summary-foot"><span>Total</span><span>${formatCurrency(order.total)}</span></div><p><strong>Timestamp:</strong> ${formatDate(order.timestamp)}</p>`; dom.confirmationModal.classList.add("visible"); dom.backdrop.classList.add("visible"); document.body.classList.add("modal-open"); }
+    function closeConfirmation() { dom.confirmationModal.classList.remove("visible"); if (!dom.cartPanel.classList.contains("open") && !dom.checkoutModal.classList.contains("visible")) { dom.backdrop.classList.remove("visible"); document.body.classList.remove("modal-open"); } }
 
-  if (password !== "1976") {
-    alert("Wrong password");
-    return;
-  }
+    function toggleAdminPanel() { const pwd = prompt("Enter Admin Password:"); if (pwd !== ADMIN_PASS) { alert("Wrong password"); return; } dom.adminPanel.classList.toggle("visible"); renderOrders(); }
+    function exportOrdersCSV() { if (!orders.length) return alert("No orders to export"); const headers = ["Order ID","Name","Phone","Address","Notes","Items","Total","Timestamp"]; const rows = orders.map(o => [o.orderId, o.name, o.phone, o.address, o.notes, o.items.map(i=>`${i.name}(${i.weightLabel}) x${i.quantity}`).join("; "), o.total, new Date(o.timestamp).toLocaleString()]); const csv = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n"); const blob = new Blob([csv], {type: "text/csv"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `iyerval_orders_${Date.now()}.csv`; a.click(); URL.revokeObjectURL(a.href); }
+    function shareWhatsApp() { if (!orders.length) return alert("No orders to share"); const lastOrder = orders[orders.length-1]; const itemsText = lastOrder.items.map(i=>`${i.name} (${i.weightLabel}) x${i.quantity}`).join(", "); const msg = `New Order from IYERVAL FOODS\n\nOrder ID: ${lastOrder.orderId}\nName: ${lastOrder.name}\nPhone: ${lastOrder.phone}\nAddress: ${lastOrder.address}\nItems: ${itemsText}\nTotal: ${formatCurrency(lastOrder.total)}\nNotes: ${lastOrder.notes || "None"}`; window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank"); }
 
-  adminPanel.classList.toggle("visible");
-  renderOrders();
-}
-
-function setupRevealAnimations() {
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("visible");
-            observer.unobserve(entry.target);
-          }
-        });
-      }, { threshold: 0.18 });
-
-      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
-    }
+    window.payWithApp = (app) => {
+      if (!cart.length) return alert("Cart is empty");
+      const amount = getCartTotal();
+      let url = "";
+      if (app === "gpay") url = `tez://upi/pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
+      else if (app === "phonepe") url = `phonepe://upi/pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
+      else url = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
+      window.location.href = url;
+      setTimeout(() => { if (confirm("Did you complete the payment? Click OK to place order.")) confirmAndPlaceOrder(); }, 1000);
+    };
 
     function bindEvents() {
-      document.getElementById("filterRow").addEventListener("click", (event) => {
-        const button = event.target.closest("[data-filter]");
-        if (!button) return;
-        selectedFilter = button.dataset.filter;
-        document.querySelectorAll(".filter-btn").forEach((entry) => entry.classList.toggle("active", entry === button));
-        renderMenu();
-      });
-
-      menuGrid.addEventListener("click", (event) => {
-        const button = event.target.closest("[data-id]");
-        if (button) addToCart(button.dataset.id);
-      });
-
-      cartItemsContainer.addEventListener("click", (event) => {
-        const quantityBtn = event.target.closest("[data-qty]");
-        const removeBtn = event.target.closest("[data-remove]");
-        if (quantityBtn) updateQuantity(quantityBtn.dataset.qty, quantityBtn.dataset.change);
-        if (removeBtn) removeCartItem(removeBtn.dataset.remove);
-      });
-
-      [cartFab, navCartBtn].forEach((button) => button.addEventListener("click", openCart));
-      closeCartBtn.addEventListener("click", closeCart);
-      checkoutBtn.addEventListener("click", openCheckout);
-      closeCheckoutBtn.addEventListener("click", closeCheckout);
-      closeConfirmationBtn.addEventListener("click", closeConfirmation);
-      continueBrowsingBtn.addEventListener("click", closeConfirmation);
-      payNowBtn.addEventListener("click", startUPIPayment);
-      checkoutForm.addEventListener("submit", placeOrder);
-      adminToggleBtn.addEventListener("click", toggleAdminPanel);
-      refreshOrdersBtn.addEventListener("click", renderOrders);
-
-      backdrop.addEventListener("click", () => {
-        closeCart();
-        closeCheckout();
-        closeConfirmation();
-      });
-
-      navLinks.addEventListener("click", (event) => {
-        if (event.target.tagName === "A") {
-          navLinks.classList.remove("open");
-          hamburgerBtn.setAttribute("aria-expanded", "false");
-          document.body.classList.remove("menu-open");
-        }
-      });
-
-      document.querySelectorAll("[data-scroll]").forEach((button) => {
-        button.addEventListener("click", () => {
-          const target = document.querySelector(button.dataset.scroll);
-          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
-        });
-      });
+      document.getElementById("filterRow").addEventListener("click", e => { const btn = e.target.closest("[data-filter]"); if(btn){ selectedFilter = btn.dataset.filter; document.querySelectorAll(".filter-btn").forEach(b=>b.classList.toggle("active", b===btn)); renderMenu(); } });
+      dom.menuGrid.addEventListener("click", e => { const btn = e.target.closest("[data-id]"); if(btn) addToCart(btn.dataset.id, parseFloat(btn.dataset.weightMultiplier || 1)); });
+      dom.cartItemsContainer.addEventListener("click", e => { const qty = e.target.closest("[data-qty]"); if(qty) updateQuantity(qty.dataset.qty, qty.dataset.change); const rm = e.target.closest("[data-remove]"); if(rm) removeCartItem(rm.dataset.remove); });
+      [dom.cartFab, dom.navCartBtn].forEach(b=>b.addEventListener("click", openCart));
+      dom.closeCartBtn.addEventListener("click", closeCart);
+      dom.checkoutBtn.addEventListener("click", openCheckout);
+      dom.closeCheckoutBtn.addEventListener("click", closeCheckout);
+      dom.closeConfirmationBtn.addEventListener("click", closeConfirmation);
+      dom.continueBrowsingBtn.addEventListener("click", closeConfirmation);
+      dom.payNowBtn.addEventListener("click", startUPIPayment);
+      dom.confirmPaymentBtn.addEventListener("click", confirmAndPlaceOrder);
+      dom.adminToggleBtn.addEventListener("click", toggleAdminPanel);
+      dom.refreshOrdersBtn.addEventListener("click", renderOrders);
+      dom.exportCSVBtn.addEventListener("click", exportOrdersCSV);
+      dom.shareWhatsAppBtn.addEventListener("click", shareWhatsApp);
+      dom.backdrop.addEventListener("click", () => { closeCart(); closeCheckout(); closeConfirmation(); });
+      document.querySelectorAll("[data-scroll]").forEach(btn => btn.addEventListener("click", () => { const target = document.querySelector(btn.dataset.scroll); if(target) target.scrollIntoView({ behavior: "smooth" }); }));
     }
 
     function init() {
-      renderMenu();
-      renderCart();
-      renderOrders();
-      bindEvents();
-      setupRevealAnimations();
-      document.addEventListener("DOMContentLoaded", () => {
-        setTimeout(() => loadingScreen.classList.add("hidden"), 700);
-      });
+      renderMenu(); renderCart(); renderOrders(); bindEvents();
+      const observer = new IntersectionObserver(entries => entries.forEach(e => e.isIntersecting && (e.target.classList.add("visible"), observer.unobserve(e.target))), { threshold: 0.18 });
+      document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+      setTimeout(() => dom.loadingScreen.classList.add("hidden"), 500);
     }
-
     init();
   </script>
 </body>
 </html>
-
-
-
