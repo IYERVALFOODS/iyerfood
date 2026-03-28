@@ -1002,11 +1002,11 @@
   hamburgerBtn.addEventListener("click", () => {
     });
 }
-        navLinks.classList.toggle("open");
-        const expanded = navLinks.classList.contains("open");
-        hamburgerBtn.setAttribute("aria-expanded", String(expanded));
-        document.body.classList.toggle("menu-open", expanded);
-      });
+navLinks.classList.toggle("open");
+const expanded = navLinks.classList.contains("open");
+hamburgerBtn.setAttribute("aria-expanded", String(expanded));
+document.body.classList.toggle("menu-open", expanded);
+});
 
       navLinks.addEventListener("click", (event) => {
         if (event.target.tagName === "A") {
