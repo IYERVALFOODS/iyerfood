@@ -617,191 +617,418 @@
 
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
-const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
-
-const menuItems = [
+    const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
+   const menuItems = [
   { id: 1, name: "Curd Chilli", category: "Snacks", price: 220, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/1.jpg" },
   { id: 2, name: "Karuvadam Basket", category: "Snacks", price: 240, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg" },
   { id: 3, name: "Avakaya Mango Pickle", category: "Meals", price: 260, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/5.jpg" },
   { id: 4, name: "Vadam Selection", category: "Snacks", price: 210, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/4.jpg" }
 ];
 
-let selectedFilter = "All";
-let cart = loadState(STORAGE_KEYS.cart, []);
-let orders = loadState(STORAGE_KEYS.orders, []);
+    let selectedFilter = "All";
+    let cart = loadState(STORAGE_KEYS.cart, []);
+    let orders = loadState(STORAGE_KEYS.orders, []);
 
-const menuGrid = document.getElementById("menuGrid");
-const navLinks = document.getElementById("navLinks");
-const adminToggleBtn = document.getElementById("adminToggleBtn");
-const adminPanel = document.getElementById("adminPanel");
-const ordersGrid = document.getElementById("ordersGrid");
-const refreshOrdersBtn = document.getElementById("refreshOrdersBtn");
-const cartFab = document.getElementById("cartFab");
-const navCartBtn = document.getElementById("navCartBtn");
-const navCartCount = document.getElementById("navCartCount");
-const fabCartLabel = document.getElementById("fabCartLabel");
-const cartPanel = document.getElementById("cartPanel");
-const cartItemsContainer = document.getElementById("cartItemsContainer");
-const cartTotal = document.getElementById("cartTotal");
-const checkoutBtn = document.getElementById("checkoutBtn");
-const closeCartBtn = document.getElementById("closeCartBtn");
-const backdrop = document.getElementById("backdrop");
-const checkoutModal = document.getElementById("checkoutModal");
-const closeCheckoutBtn = document.getElementById("closeCheckoutBtn");
-const checkoutForm = document.getElementById("checkoutForm");
-const payNowBtn = document.getElementById("payNowBtn");
-const checkoutSummaryList = document.getElementById("checkoutSummaryList");
-const checkoutSummaryTotal = document.getElementById("checkoutSummaryTotal");
-const confirmationModal = document.getElementById("confirmationModal");
-const closeConfirmationBtn = document.getElementById("closeConfirmationBtn");
-const continueBrowsingBtn = document.getElementById("continueBrowsingBtn");
-const confirmationSummary = document.getElementById("confirmationSummary");
-const loadingScreen = document.getElementById("loadingScreen");
+    const menuGrid = document.getElementById("menuGrid");
+    const navLinks = document.getElementById("navLinks");
+    const hamburgerBtn = document.getElementById("hamburgerBtn");
+    const adminToggleBtn = document.getElementById("adminToggleBtn");
+    const adminPanel = document.getElementById("adminPanel");
+    const ordersGrid = document.getElementById("ordersGrid");
+    const refreshOrdersBtn = document.getElementById("refreshOrdersBtn");
+    const cartFab = document.getElementById("cartFab");
+    const navCartBtn = document.getElementById("navCartBtn");
+    const navCartCount = document.getElementById("navCartCount");
+    const fabCartLabel = document.getElementById("fabCartLabel");
+    const cartPanel = document.getElementById("cartPanel");
+    const cartItemsContainer = document.getElementById("cartItemsContainer");
+    const cartTotal = document.getElementById("cartTotal");
+    const checkoutBtn = document.getElementById("checkoutBtn");
+    const closeCartBtn = document.getElementById("closeCartBtn");
+    const backdrop = document.getElementById("backdrop");
+    const checkoutModal = document.getElementById("checkoutModal");
+    const closeCheckoutBtn = document.getElementById("closeCheckoutBtn");
+    const checkoutForm = document.getElementById("checkoutForm");
+    const payNowBtn = document.getElementById("payNowBtn");
+    const checkoutSummaryList = document.getElementById("checkoutSummaryList");
+    const checkoutSummaryTotal = document.getElementById("checkoutSummaryTotal");
+    const confirmationModal = document.getElementById("confirmationModal");
+    const closeConfirmationBtn = document.getElementById("closeConfirmationBtn");
+    const continueBrowsingBtn = document.getElementById("continueBrowsingBtn");
+    const confirmationSummary = document.getElementById("confirmationSummary");
+    const loadingScreen = document.getElementById("loadingScreen");
 
-function loadState(key, fallback) {
-  try {
-    const raw = localStorage.getItem(key);
-    return raw ? JSON.parse(raw) : fallback;
-  } catch {
-    return fallback;
-  }
-}
+    function loadState(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (error) {
+        console.warn("Storage load failed:", error);
+        return fallback;
+      }
+    }
 
-function saveState(key, value) {
-  localStorage.setItem(key, JSON.stringify(value));
-}
+    function saveState(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+    function formatCurrency(value) { return `Rs.${Number(value).toFixed(2)}`; }
+    function formatDate(timestamp) { return new Date(timestamp).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }); }
+    function getCartCount() { return cart.reduce((sum, item) => sum + item.quantity, 0); }
+    function getCartTotal() { return cart.reduce((sum, item) => sum + item.price * item.quantity, 0); }
 
-function formatCurrency(v) {
-  return `Rs.${Number(v).toFixed(2)}`;
-}
+    function renderMenu() {
+      const filtered = selectedFilter === "All" ? menuItems : menuItems.filter((item) => item.category === selectedFilter);
+      menuGrid.innerHTML = filtered.map((item) => `
+        <article class="menu-card reveal visible">
+          <div class="menu-card-media">
+            <img src="${item.image}" alt="${item.name}" loading="lazy" />
+            <span class="menu-tag">${item.category}</span>
+          </div>
+          <div class="menu-card-body">
+            <div class="menu-card-top">
+              <h3>${item.name}</h3>
+              <span class="price">${formatCurrency(item.price)}</span>
+            </div>
+            <p>${item.description}</p>
+            <button type="button" data-id="${item.id}">Add to Cart</button>
+          </div>
+        </article>
+      `).join("");
+    }
 
-function getCartTotal() {
-  return cart.reduce((s, i) => s + i.price * i.quantity, 0);
-}
+    function renderCart() {
+      const total = getCartTotal();
+      const count = getCartCount();
+      navCartCount.textContent = count;
+      fabCartLabel.textContent = `${count} ${count === 1 ? "item" : "items"}`;
+      cartTotal.textContent = formatCurrency(total);
+      checkoutBtn.disabled = cart.length === 0;
+      checkoutBtn.style.opacity = cart.length === 0 ? "0.55" : "1";
 
-function getCartCount() {
-  return cart.reduce((s, i) => s + i.quantity, 0);
-}
+      if (!cart.length) {
+        cartItemsContainer.innerHTML = `<p class="cart-empty">Your cart is empty. Add a few signature items to begin.</p>`;
+        return;
+      }
 
-function renderMenu() {
-  const filtered = selectedFilter === "All"
-    ? menuItems
-    : menuItems.filter(i => i.category === selectedFilter);
+      cartItemsContainer.innerHTML = cart.map((item) => `
+        <article class="cart-item">
+          <div class="cart-item-head">
+            <div><strong>${item.name}</strong><div class="cart-item-price">${formatCurrency(item.price)}</div></div>
+            <button class="remove-btn" type="button" data-remove="${item.id}">Remove</button>
+          </div>
+          <div class="quantity-row">
+            <div class="quantity-controls">
+              <button class="quantity-btn" type="button" data-qty="${item.id}" data-change="-1">-</button>
+              <span>${item.quantity}</span>
+              <button class="quantity-btn" type="button" data-qty="${item.id}" data-change="1">+</button>
+            </div>
+            <strong>${formatCurrency(item.price * item.quantity)}</strong>
+          </div>
+        </article>
+      `).join("");
+    }
 
-  menuGrid.innerHTML = filtered.map(item => `
-    <article class="menu-card">
-      <div class="menu-card-media">
-        <img src="${item.image}" />
-      </div>
-      <div class="menu-card-body">
-        <h3>${item.name}</h3>
-        <span>${formatCurrency(item.price)}</span>
-        <button data-id="${item.id}">Add</button>
-      </div>
-    </article>
-  `).join("");
-}
+    function renderCheckoutSummary() {
+      checkoutSummaryList.innerHTML = cart.map((item) => `
+        <li><span>${item.name} x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>
+      `).join("");
+      checkoutSummaryTotal.textContent = formatCurrency(getCartTotal());
+    }
 
-function renderCart() {
-  navCartCount.textContent = getCartCount();
-  cartTotal.textContent = formatCurrency(getCartTotal());
+    function renderOrders() {
+      if (!orders.length) {
+        ordersGrid.innerHTML = `<article class="order-card"><strong>No orders yet</strong><p>Placed orders will appear here once checkout is completed.</p></article>`;
+        return;
+      }
 
-  if (!cart.length) {
-    cartItemsContainer.innerHTML = "Cart empty";
-    return;
-  }
+      ordersGrid.innerHTML = [...orders].reverse().map((order) => `
+        <article class="order-card">
+          <div class="order-meta"><div><strong>${order.name}</strong><span>${order.phone}</span></div><span>#${order.orderId}</span></div>
+          <p>${order.address}</p>
+          <ul class="order-items">
+            ${order.items.map((item) => `<li><span>${item.name} x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>`).join("")}
+          </ul>
+          ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}
+          <div class="order-meta"><span>${formatDate(order.timestamp)}</span><strong class="highlight">${formatCurrency(order.total)}</strong></div>
+        </article>
+      `).join("");
+    }
 
-  cartItemsContainer.innerHTML = cart.map(i => `
-    <div>
-      ${i.name} x ${i.quantity}
-    </div>
-  `).join("");
-}
+    function addToCart(itemId) {
+      const item = menuItems.find((entry) => entry.id === Number(itemId));
+      if (!item) return;
+      const existing = cart.find((entry) => entry.id === item.id);
+      if (existing) existing.quantity += 1;
+      else cart.push({ ...item, quantity: 1 });
+      saveState(STORAGE_KEYS.cart, cart);
+      renderCart();
+      openCart();
+    }
 
-function addToCart(id) {
-  const item = menuItems.find(i => i.id == id);
-  const existing = cart.find(i => i.id == id);
+    function updateQuantity(itemId, change) {
+      cart = cart
+        .map((item) => item.id === Number(itemId) ? { ...item, quantity: item.quantity + Number(change) } : item)
+        .filter((item) => item.quantity > 0);
+      saveState(STORAGE_KEYS.cart, cart);
+      renderCart();
+      renderCheckoutSummary();
+    }
 
-  if (existing) existing.quantity++;
-  else cart.push({ ...item, quantity: 1 });
+    function removeCartItem(itemId) {
+      cart = cart.filter((item) => item.id !== Number(itemId));
+      saveState(STORAGE_KEYS.cart, cart);
+      renderCart();
+      renderCheckoutSummary();
+    }
 
-  saveState(STORAGE_KEYS.cart, cart);
-  renderCart();
-}
+    function openCart() {
+      cartPanel.classList.add("open");
+      backdrop.classList.add("visible");
+      document.body.classList.add("cart-open");
+    }
 
-function startRazorpayPayment() {
+    function closeCart() {
+      cartPanel.classList.remove("open");
+      if (!checkoutModal.classList.contains("visible") && !confirmationModal.classList.contains("visible")) {
+        backdrop.classList.remove("visible");
+        document.body.classList.remove("cart-open");
+      }
+    }
+
+    function openCheckout() {
+      if (!cart.length) return;
+      renderCheckoutSummary();
+      checkoutModal.classList.add("visible");
+      checkoutModal.setAttribute("aria-hidden", "false");
+      backdrop.classList.add("visible");
+      document.body.classList.add("modal-open");
+    }
+
+    function closeCheckout() {
+      checkoutModal.classList.remove("visible");
+      checkoutModal.setAttribute("aria-hidden", "true");
+      if (!cartPanel.classList.contains("open") && !confirmationModal.classList.contains("visible")) {
+        backdrop.classList.remove("visible");
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    function openConfirmation(order) {
+      confirmationSummary.innerHTML = `
+        <div class="cart-head-row"><strong>Order ID</strong><span class="highlight">#${order.orderId}</span></div>
+        <p><strong>Name:</strong> ${order.name}</p>
+        <p><strong>Phone:</strong> ${order.phone}</p>
+        <p><strong>Address:</strong> ${order.address}</p>
+        ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}
+        <ul class="summary-list">
+          ${order.items.map((item) => `<li><span>${item.name} x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>`).join("")}
+        </ul>
+        <div class="summary-foot"><span>Total</span><span>${formatCurrency(order.total)}</span></div>
+        <p><strong>Timestamp:</strong> ${formatDate(order.timestamp)}</p>
+      `;
+      confirmationModal.classList.add("visible");
+      confirmationModal.setAttribute("aria-hidden", "false");
+      backdrop.classList.add("visible");
+      document.body.classList.add("modal-open");
+    }
+
+    function closeConfirmation() {
+      confirmationModal.classList.remove("visible");
+      confirmationModal.setAttribute("aria-hidden", "true");
+      if (!cartPanel.classList.contains("open") && !checkoutModal.classList.contains("visible")) {
+        backdrop.classList.remove("visible");
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    function buildOrder(formData, paymentStatus = "pending") {
+      const timestamp = Date.now();
+      return {
+        orderId: `IYF-${timestamp}`,
+        name: formData.get("name").toString().trim(),
+        phone: formData.get("phone").toString().trim(),
+        address: formData.get("address").toString().trim(),
+        notes: formData.get("notes").toString().trim(),
+        items: cart.map((item) => ({ id: item.id, name: item.name, price: item.price, quantity: item.quantity })),
+        total: getCartTotal(),
+        paymentStatus,
+        timestamp
+      };
+    }
+
+    function finalizeOrder(order) {
+      orders.push(order);
+      saveState(STORAGE_KEYS.orders, orders);
+      cart = [];
+      saveState(STORAGE_KEYS.cart, cart);
+
+      checkoutForm.reset();
+      renderCart();
+      renderOrders();
+      closeCheckout();
+      closeCart();
+      openConfirmation(order);
+      adminPanel.classList.add("visible");
+      adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+   function startRazorpayPayment() {
+  if (!cart.length) return;
+
   const formData = new FormData(checkoutForm);
+  const customerName = formData.get("name").toString().trim();
+  const customerPhone = formData.get("phone").toString().trim();
+  const customerAddress = formData.get("address").toString().trim();
 
-  if (!formData.get("name") || !formData.get("phone") || !formData.get("address")) {
+  if (!customerName || !customerPhone || !customerAddress) {
     checkoutForm.reportValidity();
     return;
   }
 
   if (typeof Razorpay === "undefined") {
-    alert("Razorpay not loaded");
+    alert("Razorpay failed to load. Try again.");
     return;
   }
 
+  const totalAmount = getCartTotal();
+  const orderDraft = buildOrder(formData, "paid");
+
   const options = {
-    key: "rzp_live_xxxxxxxxxx", // 🔥 PUT YOUR KEY
-    amount: getCartTotal() * 100,
+    key: "rzp_live_xxxxxxxxxx", // your key
+    amount: totalAmount * 100,
     currency: "INR",
     name: "IYERVAL FOODS",
-    handler: function () {
-      alert("Payment successful");
+    description: "Order Payment",
+
+    handler: function (response) {
+      orderDraft.paymentStatus = "paid";
+      orderDraft.razorpayPaymentId = response.razorpay_payment_id || "";
+      finalizeOrder(orderDraft);
+      alert("Payment successful!");
+    },
+
+    prefill: {
+      name: customerName,
+      contact: customerPhone
+    },
+
+    theme: {
+      color: "#ff8c00"
+    },
+
+    modal: {
+      ondismiss: function () {
+        alert("Payment cancelled");
+      }
     }
   };
 
-  new Razorpay(options).open();
+  const razorpay = new Razorpay(options);
+  razorpay.open();
 }
 
-function bindEvents() {
-  document.getElementById("filterRow").addEventListener("click", e => {
-    const btn = e.target.closest("[data-filter]");
-    if (!btn) return;
-    selectedFilter = btn.dataset.filter;
-    renderMenu();
-  });
+    function placeOrder(event) {
+      event.preventDefault();
+      if (!cart.length) return;
+      const formData = new FormData(checkoutForm);
+      const order = buildOrder(formData, "unpaid");
 
-  menuGrid.addEventListener("click", e => {
-    const btn = e.target.closest("[data-id]");
-    if (btn) addToCart(btn.dataset.id);
-  });
+      if (!order.name || !order.phone || !order.address) {
+        checkoutForm.reportValidity();
+        return;
+      }
 
-  navCartBtn.addEventListener("click", () => {
-    cartPanel.classList.add("open");
-  });
+      finalizeOrder(order);
+    }
 
-  closeCartBtn.addEventListener("click", () => {
-    cartPanel.classList.remove("open");
-  });
+    function toggleAdminPanel() {
+      adminPanel.classList.toggle("visible");
+      renderOrders();
+      if (adminPanel.classList.contains("visible")) {
+        adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
 
-  checkoutBtn.addEventListener("click", () => {
-    checkoutModal.classList.add("visible");
-  });
+    function setupRevealAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.18 });
 
-  closeCheckoutBtn.addEventListener("click", () => {
-    checkoutModal.classList.remove("visible");
-  });
+      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+    }
 
-  payNowBtn.addEventListener("click", startRazorpayPayment);
-}
+    function bindEvents() {
+      document.getElementById("filterRow").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-filter]");
+        if (!button) return;
+        selectedFilter = button.dataset.filter;
+        document.querySelectorAll(".filter-btn").forEach((entry) => entry.classList.toggle("active", entry === button));
+        renderMenu();
+      });
 
-function init() {
-  renderMenu();
-  renderCart();
-  bindEvents();
+      menuGrid.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-id]");
+        if (button) addToCart(button.dataset.id);
+      });
 
-  window.addEventListener("load", () => {
-    setTimeout(() => loadingScreen.classList.add("hidden"), 500);
-  });
-}
+      cartItemsContainer.addEventListener("click", (event) => {
+        const quantityBtn = event.target.closest("[data-qty]");
+        const removeBtn = event.target.closest("[data-remove]");
+        if (quantityBtn) updateQuantity(quantityBtn.dataset.qty, quantityBtn.dataset.change);
+        if (removeBtn) removeCartItem(removeBtn.dataset.remove);
+      });
 
-init();
-</script>
+      [cartFab, navCartBtn].forEach((button) => button.addEventListener("click", openCart));
+      closeCartBtn.addEventListener("click", closeCart);
+      checkoutBtn.addEventListener("click", openCheckout);
+      closeCheckoutBtn.addEventListener("click", closeCheckout);
+      closeConfirmationBtn.addEventListener("click", closeConfirmation);
+      continueBrowsingBtn.addEventListener("click", closeConfirmation);
+      payNowBtn.addEventListener("click", startRazorpayPayment);
+      checkoutForm.addEventListener("submit", placeOrder);
+      adminToggleBtn.addEventListener("click", toggleAdminPanel);
+      refreshOrdersBtn.addEventListener("click", renderOrders);
+
+      backdrop.addEventListener("click", () => {
+        closeCart();
+        closeCheckout();
+        closeConfirmation();
+      });
+      
+      navLinks.addEventListener("click", (event) => {
+        if (event.target.tagName === "A") {
+          navLinks.classList.remove("open");
+          hamburgerBtn.setAttribute("aria-expanded", "false");
+          document.body.classList.remove("menu-open");
+        }
+      });
+
+      document.querySelectorAll("[data-scroll]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const target = document.querySelector(button.dataset.scroll);
+          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+    }
+
+    function init() {
+      renderMenu();
+      renderCart();
+      renderOrders();
+      bindEvents();
+      setupRevealAnimations();
+      document.addEventListener("DOMContentLoaded", () => {
+        setTimeout(() => loadingScreen.classList.add("hidden"), 700);
+      });
+    }
+
+    init();
+  </script>
 </body>
 </html>
-
 
 
 
