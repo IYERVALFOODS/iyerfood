@@ -423,7 +423,7 @@
     <section class="hero" id="home">
       <div class="container hero-grid">
         <div class="hero-copy">
-          <img class="hero-main-logo" src="ASSETS/1.png" alt="IYERVAL FOODS main logo" />
+          <img class="hero-main-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="IYERVAL FOODS main logo" />
           <span class="eyebrow">Premium South Indian Pantry & Kitchen</span>
           <h1>Tradition, plated <span>for today.</span></h1>
           <p>
@@ -998,7 +998,10 @@
         closeConfirmation();
       });
 
-      hamburgerBtn.addEventListener("click", () => {
+      if (hamburgerBtn) {
+  hamburgerBtn.addEventListener("click", () => {
+    });
+}
         navLinks.classList.toggle("open");
         const expanded = navLinks.classList.contains("open");
         hamburgerBtn.setAttribute("aria-expanded", String(expanded));
