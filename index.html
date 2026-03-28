@@ -888,8 +888,7 @@ function startUPIPayment() {
 
   const amount = getCartTotal();
 
-  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR&tn=IYERVAL Order`;
-
+  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
   window.location.href = upiLink;
 
 // fallback if not opened
