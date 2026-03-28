@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IYERVAL FOODS | Premium Ordering Experience</title>
+  <title>IYERVAL FOODS | Pure Tradition, Modern Craft</title>
   <style>
     :root {
       --bg: #0d0d0d;
@@ -37,6 +37,7 @@
     img { display: block; max-width: 100%; }
     button, input, textarea, select { font: inherit; }
 
+    /* Loader */
     .loading-screen {
       position: fixed; inset: 0; display: grid; place-items: center; z-index: 1200;
       background: linear-gradient(135deg, #0d0d0d, #181818);
@@ -51,6 +52,7 @@
     }
     .loading-mark span { letter-spacing: 0.35em; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; }
 
+    /* Utility */
     .container { width: var(--container); margin: 0 auto; }
     .navbar {
       position: sticky; top: 0; z-index: 900;
@@ -107,6 +109,7 @@
       color: #1a1204; font-weight: 800; font-size: 0.75rem;
     }
 
+    /* Hero, About, etc. (same as before, but with minor text updates) */
     .hero {
       min-height: calc(100svh - var(--nav-h)); position: relative; display: grid; align-items: center; overflow: hidden;
     }
@@ -201,7 +204,7 @@
       position: relative;
     }
     .about-media::after {
-      content: "Traditional flavour, modern craft";
+      content: "Crafted in Palakkad, with love.";
       position: absolute; left: 1.4rem; right: 1.4rem; bottom: 1.4rem; padding: 1rem 1.1rem;
       border-radius: 18px; background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.12);
       backdrop-filter: blur(8px); font-weight: 700; letter-spacing: 0.04em;
@@ -216,6 +219,7 @@
     .menu-card {
       border-radius: 28px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);
       background: rgba(255, 255, 255, 0.04); transform: translateY(0); box-shadow: 0 18px 32px rgba(0, 0, 0, 0.16);
+      transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.3s ease;
     }
     .menu-card:hover { transform: translateY(-10px); box-shadow: 0 28px 54px rgba(0, 0, 0, 0.26); }
     .menu-card-media { position: relative; overflow: hidden; aspect-ratio: 1 / 0.92; }
@@ -260,6 +264,8 @@
     .order-card {
       border-radius: 22px; border: 1px solid rgba(255, 255, 255, 0.08);
       background: rgba(255, 255, 255, 0.04); padding: 1.2rem; display: grid; gap: 0.8rem;
+      position: relative;
+      transition: all 0.3s ease;
     }
     .order-meta { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
     .order-meta strong { font-size: 1rem; }
@@ -268,6 +274,60 @@
     .order-items li {
       display: flex; justify-content: space-between; gap: 0.75rem;
       border-bottom: 1px dashed rgba(255, 255, 255, 0.08); padding-bottom: 0.45rem; font-size: 0.94rem;
+    }
+    .complete-btn {
+      background: rgba(46, 204, 113, 0.2);
+      border: 1px solid #2ecc71;
+      color: #2ecc71;
+      padding: 0.4rem 0.8rem;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .complete-btn:hover {
+      background: #2ecc71;
+      color: #1a1204;
+      transform: scale(1.02);
+    }
+
+    .feedback-form {
+      display: grid;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .feedback-form input, .feedback-form textarea {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text);
+      padding: 0.95rem 1rem;
+      resize: vertical;
+    }
+    .feedback-form textarea { min-height: 100px; }
+
+    /* Whoosh animations */
+    @keyframes whooshIn {
+      0% { opacity: 0; transform: scale(0.9) translateY(20px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    @keyframes whooshOut {
+      0% { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(0.9) translateY(-20px); }
+    }
+    .cart-item, .order-card, .menu-card {
+      animation: whooshIn 0.4s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
+    }
+    .modal-card {
+      animation: whooshIn 0.3s ease-out;
+    }
+    .cart-panel.open {
+      animation: slideInRight 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+    }
+    @keyframes slideInRight {
+      from { transform: translateX(100%); }
+      to { transform: translateX(0); }
     }
 
     .reveal { opacity: 0; transform: translateY(40px); transition: opacity 700ms ease, transform 700ms ease; }
@@ -283,7 +343,7 @@
 
     .cart-panel {
       position: fixed; top: 0; right: 0; width: min(460px, 100vw); height: 100vh; z-index: 1100;
-      border-radius: 30px 0 0 30px; transform: translateX(106%);
+      border-radius: 30px 0 0 30px; transform: translateX(100%);
       transition: transform 460ms cubic-bezier(0.2, 0.8, 0.2, 1); display: grid; grid-template-rows: auto 1fr auto;
     }
     .cart-panel.open { transform: translateX(0); }
@@ -371,7 +431,7 @@
   <header class="navbar">
     <div class="container nav-inner">
       <a class="brand" href="#home"><img src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="logo"><div class="brand-copy"><strong>IYERVAL FOODS</strong><span>Authentic Taste. Pure Tradition.</span></div></a>
-      <nav><ul class="nav-links" id="navLinks"><li><a href="#home">Home</a></li><li><a href="#menu">Menu</a></li><li><a href="#about">About</a></li><li><a href="#contact">Contact</a></li></ul></nav>
+      <nav><ul class="nav-links" id="navLinks"><li><a href="#home">Home</a></li><li><a href="#menu">Menu</a></li><li><a href="#about">Our Story</a></li><li><a href="#contact">Contact</a></li></ul></nav>
       <div class="nav-actions">
         <button class="ghost-btn" id="adminToggleBtn">Admin Orders</button>
         <img class="nav-mini-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/2.png" alt="mini logo">
@@ -385,20 +445,30 @@
   <main>
     <section class="hero" id="home">
       <div class="container hero-grid">
-        <div class="hero-copy"><img class="hero-main-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="logo"><span class="eyebrow">Premium South Indian Pantry & Kitchen</span><h1>Tradition, plated <span>for today.</span></h1><p>Browse curated signature products, add favourites, and complete your order with a secure payment flow. Only after successful payment your order is saved.</p><div class="hero-actions"><button class="solid-btn" data-scroll="#menu">Order Now</button><button class="ghost-btn" data-scroll="#about">Discover Story</button></div></div>
-        <aside class="hero-card"><div class="hero-card-media"></div><div class="hero-card-content"><small>Chef's Board</small><strong>Curd Chilli, Vadam, Pickles & More</strong><p>Weight-based pricing, UPI deep links, and a manual “I Have Paid” button ensure you only pay once.</p></div></aside>
+        <div class="hero-copy"><img class="hero-main-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="logo"><span class="eyebrow">Premium South Indian Pantry & Kitchen</span><h1>Tradition, plated <span>for today.</span></h1><p>Browse our curated collection of authentic, preservative‑free products made in Palakkad. Order with confidence – only after payment your order is confirmed.</p><div class="hero-actions"><button class="solid-btn" data-scroll="#menu">Order Now</button><button class="ghost-btn" data-scroll="#about">Discover Our Story</button></div></div>
+        <aside class="hero-card"><div class="hero-card-media"></div><div class="hero-card-content"><small>Chef's Board</small><strong>Curd Chilli, Vadam, Pickles & More</strong><p>Weight‑based pricing, UPI deep links, and a manual “I Have Paid” button ensure you only pay once.</p></div></aside>
       </div>
     </section>
 
-    <section class="reveal" id="about"><div class="container"><div class="section-head"><span class="eyebrow">About</span><h2>Rooted in heritage, served with polish.</h2><p>IYERVAL FOODS blends authentic recipes with weight‑based pricing and a secure ordering flow that never auto‑places orders. Payments are manual – you click “I Have Paid” after finishing payment.</p></div><div class="about-grid"><div class="about-copy"><p>This storefront features weight selection (100g to 1kg), a ₹1 test product for payment trials, and a password‑protected admin panel. All orders are stored locally and can be exported to CSV or shared via WhatsApp.</p><div class="about-points"><article><strong>Secure Payments</strong><span>UPI deep links open your payment app; order is placed only after you confirm payment.</span></article><article><strong>Weight‑Based Pricing</strong><span>Prices update instantly when you change weight.</span></article><article><strong>Admin Tools</strong><span>Export orders, share via WhatsApp, and view order history (password: 1976).</span></article></div></div><div class="about-media" aria-hidden="true"></div></div></div></section>
+    <section class="reveal" id="about"><div class="container"><div class="section-head"><span class="eyebrow">Our Story</span><h2>Rooted in heritage, served with polish.</h2><p>IYERVAL FOODS is born in the heart of Palakkad, Kerala. We bring you traditional recipes crafted with zero preservatives and uncompromised health.</p></div><div class="about-grid"><div class="about-copy"><p>Every product is made using age‑old family methods – sun‑dried vadam, hand‑pounded spices, and pickles fermented naturally. No artificial colours, no chemical preservatives, just pure, wholesome taste. Our small‑batch production ensures freshness in every bite.</p><div class="about-points"><article><strong>Made in Palakkad</strong><span>Our kitchen is nestled in the lush countryside of Palakkad, where traditional recipes have been preserved for generations.</span></article><article><strong>Zero Preservatives</strong><span>We use only natural ingredients: sea salt, cold‑pressed oils, and traditional sun‑drying techniques. No chemicals, ever.</span></article><article><strong>Health First</strong><span>All our products are free from added MSG, artificial flavours, and preservatives. Pure, clean eating.</span></article><article><strong>Small Batch</strong><span>We produce in small batches to guarantee quality and freshness. Each jar is crafted with care.</span></article></div></div><div class="about-media" aria-hidden="true"></div></div></div></section>
 
     <section class="reveal" id="menu"><div class="container"><div class="section-head"><span class="eyebrow">Menu</span><h2>Curated for every craving.</h2><p>Choose weight, see updated price, and add to cart. A test product (₹1) is available for payment testing.</p></div><div class="filter-row" id="filterRow"><button class="filter-btn active" data-filter="All">All</button><button class="filter-btn" data-filter="Meals">Meals</button><button class="filter-btn" data-filter="Snacks">Snacks</button><button class="filter-btn" data-filter="Drinks">Drinks</button></div><div class="menu-grid" id="menuGrid"></div></div></section>
 
-    <section class="reveal" id="contact"><div class="container"><div class="section-head"><span class="eyebrow">Contact</span><h2>Every order captured, every detail ready.</h2><p>Admin panel requires password (1976). You can export orders as CSV or share them via WhatsApp.</p></div><div class="contact-grid"><div class="contact-card"><strong>Ordering</strong><p>Select weight, add to cart, checkout, pay via UPI, then click “I Have Paid” to finalise.</p></div><div class="contact-card"><strong>Storage</strong><p>Cart and orders stored in localStorage. Admin panel accessible only with correct password.</p></div><div class="contact-card"><strong>Admin Access</strong><p>Use the <code>Admin Orders</code> button, enter <code>1976</code>, then export or share orders.</p></div></div>
-      <div class="admin-panel" id="adminPanel"><div class="cart-head-row"><div><span class="eyebrow">Hidden Admin View</span><h3 style="margin-top:0.4rem">Stored Orders</h3></div><div><button class="panel-btn" id="refreshOrdersBtn">Refresh</button><button class="panel-btn" id="exportCSVBtn">Export CSV</button><button class="panel-btn" id="shareWhatsAppBtn">Share via WhatsApp</button></div></div><p>Every placed order is shown here with customer details, items, total, and timestamp.</p><div class="orders-grid" id="ordersGrid"></div></div></div></section>
+    <section class="reveal" id="contact"><div class="container"><div class="section-head"><span class="eyebrow">Contact & Feedback</span><h2>We'd love to hear from you.</h2><p>Have a question, suggestion, or just want to share your experience? Reach out below.</p></div><div class="contact-grid"><div class="contact-card"><strong>Order Support</strong><p>For any order related queries, email us at <a href="mailto:orders@iyervalfoods.com">orders@iyervalfoods.com</a> or call +91 98765 43210.</p></div><div class="contact-card"><strong>Wholesale Inquiries</strong><p>Interested in stocking our products? Reach our sales team at <a href="mailto:wholesale@iyervalfoods.com">wholesale@iyervalfoods.com</a>.</p></div><div class="contact-card"><strong>Visit Us</strong><p>IYERVAL FOODS<br>Kalpathy, Palakkad, Kerala – 678001<br>Open Mon–Sat, 9am–6pm</p></div></div>
+      <div class="contact-card" style="margin-top: 2rem;">
+        <strong>Send us your feedback</strong>
+        <form id="feedbackForm" class="feedback-form">
+          <input type="email" placeholder="Your email address" required>
+          <textarea placeholder="Your feedback or suggestion..." rows="3" required></textarea>
+          <button type="submit" class="solid-btn" style="padding: 0.75rem;">Submit Feedback</button>
+        </form>
+        <p id="feedbackMsg" style="color: #2ecc71; margin-top: 0.5rem; display: none;">Thank you! We'll get back to you soon.</p>
+      </div>
+
+      <div class="admin-panel" id="adminPanel"><div class="cart-head-row"><div><span class="eyebrow">Admin View</span><h3 style="margin-top:0.4rem">Order Management</h3></div><div><button class="panel-btn" id="refreshOrdersBtn">Refresh</button><button class="panel-btn" id="exportCSVBtn">Export CSV</button><button class="panel-btn" id="shareWhatsAppBtn">Share via WhatsApp</button></div></div><div class="orders-grid" id="ordersGrid"></div></div></div></section>
   </main>
 
-  <footer class="footer"><div class="container footer-inner"><span>IYERVAL FOODS premium ordering website</span><span>Built with HTML, CSS, and JavaScript only</span></div></footer>
+  <footer class="footer"><div class="container footer-inner"><span>© 2025 IYERVAL FOODS – Preservative‑free tradition from Palakkad</span><span>Crafted with love, for your table</span></div></footer>
 
   <div class="backdrop" id="backdrop"></div>
 
@@ -409,12 +479,11 @@
   <div class="modal" id="confirmationModal"><div class="modal-card confirmation-card"><div class="modal-top"><div><span class="eyebrow">Order Confirmed</span><h3>Order Placed Successfully</h3></div><button class="close-btn" id="closeConfirmationBtn">Close</button></div><p>Your order has been saved. It is now visible in the admin panel.</p><div class="confirmation-summary" id="confirmationSummary"></div><button class="submit-btn" id="continueBrowsingBtn">Continue Browsing</button></div></div>
 
   <script>
-    const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
+    const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders", feedback: "iyerval-feedback" };
     const UPI_ID = "vanajasreeram.1976@okhdfcbank";
     const UPI_NAME = "SUDHARSAN P S";
     const ADMIN_PASS = "1976";
 
-    // Weight options & price multipliers (base price per 100g)
     const weights = [
       { label: "100g", multiplier: 1 },
       { label: "200g", multiplier: 2 },
@@ -433,7 +502,7 @@
     let selectedFilter = "All";
     let cart = loadState(STORAGE_KEYS.cart, []);
     let orders = loadState(STORAGE_KEYS.orders, []);
-    let pendingOrderData = null; // store form data and cart snapshot before payment
+    let pendingOrderData = null;
 
     const dom = {
       menuGrid: document.getElementById("menuGrid"),
@@ -466,6 +535,8 @@
       continueBrowsingBtn: document.getElementById("continueBrowsingBtn"),
       confirmationSummary: document.getElementById("confirmationSummary"),
       loadingScreen: document.getElementById("loadingScreen"),
+      feedbackForm: document.getElementById("feedbackForm"),
+      feedbackMsg: document.getElementById("feedbackMsg")
     };
 
     function loadState(key, fallback) { try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch(e) { return fallback; } }
@@ -478,10 +549,9 @@
     function renderMenu() {
       const filtered = selectedFilter === "All" ? menuItems : menuItems.filter(i => i.category === selectedFilter);
       dom.menuGrid.innerHTML = filtered.map(item => {
-        const currentPrice = (item.basePrice * 10).toFixed(2); // basePrice per 100g, show price for 100g
+        const currentPrice = (item.basePrice * 10).toFixed(2);
         return `<article class="menu-card"><div class="menu-card-media"><img src="${item.image}" alt="${item.name}" loading="lazy"><span class="menu-tag">${item.category}</span></div><div class="menu-card-body"><div class="menu-card-top"><h3>${item.name}</h3><span class="price">${formatCurrency(currentPrice)}</span></div><p>${item.description}</p><select class="weight-select" data-id="${item.id}" data-base="${item.basePrice}">${weights.map(w => `<option value="${w.multiplier}">${w.label} (${formatCurrency(item.basePrice * w.multiplier * 10)})</option>`).join("")}</select><button data-id="${item.id}" data-weight-multiplier="1">Add to Cart</button></div></article>`;
       }).join("");
-      // Attach weight change event after rendering
       document.querySelectorAll(".weight-select").forEach(select => {
         select.addEventListener("change", function() {
           const mult = parseFloat(this.value);
@@ -492,7 +562,6 @@
           const addBtn = this.closest(".menu-card-body").querySelector("button");
           addBtn.dataset.weightMultiplier = mult;
         });
-        // trigger initial
         select.dispatchEvent(new Event("change"));
       });
     }
@@ -547,7 +616,16 @@
 
     function renderOrders() {
       if (!orders.length) { dom.ordersGrid.innerHTML = `<article class="order-card"><strong>No orders yet</strong><p>Placed orders will appear here.</p></article>`; return; }
-      dom.ordersGrid.innerHTML = [...orders].reverse().map(order => `<article class="order-card"><div class="order-meta"><div><strong>${order.name}</strong><span>${order.phone}</span></div><span>#${order.orderId}</span></div><p>${order.address}</p><ul class="order-items">${order.items.map(it => `<li><span>${it.name} (${it.weightLabel}) x ${it.quantity}</span><span>${formatCurrency(it.price * it.quantity)}</span></li>`).join("")}</ul>${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}<div class="order-meta"><span>${formatDate(order.timestamp)}</span><strong class="highlight">${formatCurrency(order.total)}</strong></div></article>`).join("");
+      dom.ordersGrid.innerHTML = [...orders].reverse().map((order, idx) => `<article class="order-card" data-order-index="${idx}"><div class="order-meta"><div><strong>${order.name}</strong><span>${order.phone}</span></div><span>#${order.orderId}</span></div><p>${order.address}</p><ul class="order-items">${order.items.map(it => `<li><span>${it.name} (${it.weightLabel}) x ${it.quantity}</span><span>${formatCurrency(it.price * it.quantity)}</span></li>`).join("")}</ul>${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}<div class="order-meta"><span>${formatDate(order.timestamp)}</span><strong class="highlight">${formatCurrency(order.total)}</strong></div><button class="complete-btn" data-order-id="${order.orderId}">✓ Completed</button></article>`).join("");
+      // Attach complete button events
+      document.querySelectorAll(".complete-btn").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          const orderId = btn.dataset.orderId;
+          orders = orders.filter(o => o.orderId !== orderId);
+          saveState(STORAGE_KEYS.orders, orders);
+          renderOrders();
+        });
+      });
     }
 
     function buildOrder(formData, paymentStatus = "paid") {
@@ -578,7 +656,6 @@
       closeCart();
       openConfirmation(order);
       dom.adminPanel.classList.add("visible");
-      if (!dom.adminPanel.classList.contains("visible")) dom.adminPanel.classList.add("visible");
     }
 
     function startUPIPayment() {
@@ -591,7 +668,6 @@
       const amount = getCartTotal();
       const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
       window.location.href = upiLink;
-      // Store pending order data for later confirmation
       pendingOrderData = { formData: new FormData(dom.checkoutForm), cartSnapshot: [...cart] };
     }
 
@@ -604,8 +680,8 @@
 
     function openCart() { dom.cartPanel.classList.add("open"); dom.backdrop.classList.add("visible"); document.body.classList.add("cart-open"); }
     function closeCart() { dom.cartPanel.classList.remove("open"); if (!dom.checkoutModal.classList.contains("visible") && !dom.confirmationModal.classList.contains("visible")) { dom.backdrop.classList.remove("visible"); document.body.classList.remove("cart-open"); } }
-    function openCheckout() { if (!cart.length) return; renderCheckoutSummary(); dom.checkoutModal.classList.add("visible"); dom.checkoutModal.setAttribute("aria-hidden", "false"); dom.backdrop.classList.add("visible"); document.body.classList.add("modal-open"); }
-    function closeCheckout() { dom.checkoutModal.classList.remove("visible"); dom.checkoutModal.setAttribute("aria-hidden", "true"); if (!dom.cartPanel.classList.contains("open") && !dom.confirmationModal.classList.contains("visible")) { dom.backdrop.classList.remove("visible"); document.body.classList.remove("modal-open"); } pendingOrderData = null; }
+    function openCheckout() { if (!cart.length) return; renderCheckoutSummary(); dom.checkoutModal.classList.add("visible"); dom.backdrop.classList.add("visible"); document.body.classList.add("modal-open"); }
+    function closeCheckout() { dom.checkoutModal.classList.remove("visible"); if (!dom.cartPanel.classList.contains("open") && !dom.confirmationModal.classList.contains("visible")) { dom.backdrop.classList.remove("visible"); document.body.classList.remove("modal-open"); } pendingOrderData = null; }
     function openConfirmation(order) { dom.confirmationSummary.innerHTML = `<div class="cart-head-row"><strong>Order ID</strong><span class="highlight">#${order.orderId}</span></div><p><strong>Name:</strong> ${order.name}</p><p><strong>Phone:</strong> ${order.phone}</p><p><strong>Address:</strong> ${order.address}</p>${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}<ul class="summary-list">${order.items.map(it => `<li><span>${it.name} (${it.weightLabel}) x ${it.quantity}</span><span>${formatCurrency(it.price * it.quantity)}</span></li>`).join("")}</ul><div class="summary-foot"><span>Total</span><span>${formatCurrency(order.total)}</span></div><p><strong>Timestamp:</strong> ${formatDate(order.timestamp)}</p>`; dom.confirmationModal.classList.add("visible"); dom.backdrop.classList.add("visible"); document.body.classList.add("modal-open"); }
     function closeConfirmation() { dom.confirmationModal.classList.remove("visible"); if (!dom.cartPanel.classList.contains("open") && !dom.checkoutModal.classList.contains("visible")) { dom.backdrop.classList.remove("visible"); document.body.classList.remove("modal-open"); } }
 
@@ -623,6 +699,19 @@
       window.location.href = url;
       setTimeout(() => { if (confirm("Did you complete the payment? Click OK to place order.")) confirmAndPlaceOrder(); }, 1000);
     };
+
+    function handleFeedback(e) {
+      e.preventDefault();
+      const email = dom.feedbackForm.querySelector("input").value;
+      const feedback = dom.feedbackForm.querySelector("textarea").value;
+      if (!email || !feedback) return;
+      const feedbacks = loadState(STORAGE_KEYS.feedback, []);
+      feedbacks.push({ email, feedback, timestamp: Date.now() });
+      saveState(STORAGE_KEYS.feedback, feedbacks);
+      dom.feedbackMsg.style.display = "block";
+      dom.feedbackForm.reset();
+      setTimeout(() => dom.feedbackMsg.style.display = "none", 3000);
+    }
 
     function bindEvents() {
       document.getElementById("filterRow").addEventListener("click", e => { const btn = e.target.closest("[data-filter]"); if(btn){ selectedFilter = btn.dataset.filter; document.querySelectorAll(".filter-btn").forEach(b=>b.classList.toggle("active", b===btn)); renderMenu(); } });
@@ -642,6 +731,7 @@
       dom.shareWhatsAppBtn.addEventListener("click", shareWhatsApp);
       dom.backdrop.addEventListener("click", () => { closeCart(); closeCheckout(); closeConfirmation(); });
       document.querySelectorAll("[data-scroll]").forEach(btn => btn.addEventListener("click", () => { const target = document.querySelector(btn.dataset.scroll); if(target) target.scrollIntoView({ behavior: "smooth" }); }));
+      dom.feedbackForm.addEventListener("submit", handleFeedback);
     }
 
     function init() {
