@@ -619,7 +619,7 @@
    const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
 
 const UPI_ID = "pssudharsansreeram@okicici";
-const UPI_NAME = "PS Sudharsan";
+const UPI_NAME = "SUDHARSAN P S";
    const menuItems = [
   { id: 1, name: "Curd Chilli", category: "Snacks", price: 220, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/1.jpg" },
   { id: 2, name: "Karuvadam Basket", category: "Snacks", price: 240, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg" },
@@ -888,13 +888,14 @@ function startUPIPayment() {
 
   const amount = getCartTotal();
 
-  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
+  const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR&tn=IYERVAL Order`;
 
   window.location.href = upiLink;
 
-  // show alert only (no auto order)
-  alert("Complete payment in your UPI app.\nThen click Pay Now again to confirm.");
-}
+// fallback if not opened
+setTimeout(() => {
+  alert("If payment app didn't open, copy UPI ID and pay manually:\n" + UPI_ID);
+}, 2000);
 
 /* ⛔ THIS COMES AFTER */
 function placeOrder(event) {
