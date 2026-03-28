@@ -891,10 +891,10 @@ function startUPIPayment() {
   const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
   window.location.href = upiLink;
 
-// fallback if not opened
-setTimeout(() => {
-  alert("If payment app didn't open, copy UPI ID and pay manually:\n" + UPI_ID);
-}, 2000);
+  setTimeout(() => {
+    alert("If payment app didn't open, pay manually:\n" + UPI_ID);
+  }, 2000);
+} // ✅ THIS LINE WAS MISSING
 
 /* ⛔ THIS COMES AFTER */
 function placeOrder(event) {
