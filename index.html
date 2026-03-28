@@ -870,55 +870,60 @@
       adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
-    function startRazorpayPayment() {
-      if (!cart.length) return;
-      const formData = new FormData(checkoutForm);
-      const customerName = formData.get("name").toString().trim();
-      const customerPhone = formData.get("phone").toString().trim();
-      const customerAddress = formData.get("address").toString().trim();
+   function startRazorpayPayment() {
+  if (!cart.length) return;
 
-      if (!customerName || !customerPhone || !customerAddress) {
-        checkoutForm.reportValidity();
-        return;
-      }
+  const formData = new FormData(checkoutForm);
+  const customerName = formData.get("name").toString().trim();
+  const customerPhone = formData.get("phone").toString().trim();
+  const customerAddress = formData.get("address").toString().trim();
 
-      if (typeof Razorpay === "undefined") {
-        alert("Razorpay failed to load. Try again.");
-        return;
-      }
-
-      const totalAmount = getCartTotal();
-      const orderDraft = buildOrder(formData, "paid");
-
-      const options = {
-  key: "rzp_live_xxxxxxxxxx", // 🔥 YOUR LIVE KEY
-  amount: totalAmount * 100,
-  currency: "INR",
-  name: "IYERVAL FOODS",
-  description: "Order Payment",
-
-  handler: function (response) {
-    orderDraft.paymentStatus = "paid";
-    orderDraft.razorpayPaymentId = response.razorpay_payment_id || "";
-    finalizeOrder(orderDraft);
-    alert("Payment successful!");
-  },
-
-  prefill: {
-    name: customerName,
-    contact: customerPhone
-  },
-
-  theme: {
-    color: "#ff8c00"
-  },
-
-  modal: {
-    ondismiss: function () {
-      alert("Payment cancelled");
-    }
+  if (!customerName || !customerPhone || !customerAddress) {
+    checkoutForm.reportValidity();
+    return;
   }
-};
+
+  if (typeof Razorpay === "undefined") {
+    alert("Razorpay failed to load. Try again.");
+    return;
+  }
+
+  const totalAmount = getCartTotal();
+  const orderDraft = buildOrder(formData, "paid");
+
+  const options = {
+    key: "rzp_live_xxxxxxxxxx", // your key
+    amount: totalAmount * 100,
+    currency: "INR",
+    name: "IYERVAL FOODS",
+    description: "Order Payment",
+
+    handler: function (response) {
+      orderDraft.paymentStatus = "paid";
+      orderDraft.razorpayPaymentId = response.razorpay_payment_id || "";
+      finalizeOrder(orderDraft);
+      alert("Payment successful!");
+    },
+
+    prefill: {
+      name: customerName,
+      contact: customerPhone
+    },
+
+    theme: {
+      color: "#ff8c00"
+    },
+
+    modal: {
+      ondismiss: function () {
+        alert("Payment cancelled");
+      }
+    }
+  };
+
+  const razorpay = new Razorpay(options);
+  razorpay.open();
+}
 
     function placeOrder(event) {
       event.preventDefault();
