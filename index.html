@@ -1022,7 +1022,7 @@
       renderOrders();
       bindEvents();
       setupRevealAnimations();
-      window.addEventListener("load", () => {
+      document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => loadingScreen.classList.add("hidden"), 700);
       });
     }
