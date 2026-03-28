@@ -164,7 +164,7 @@
       aspect-ratio: 1 / 1.05;
       background:
         linear-gradient(180deg, transparent 0%, rgba(13, 13, 13, 0.6) 100%),
-        url("ASSETS/ITEM MENU.png") center/cover;
+        url("https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/ITEM%20MENU.png") center/cover;
     }
     .hero-main-logo {
       width: min(100%, 360px);
@@ -213,7 +213,7 @@
       overflow: hidden; min-height: 420px;
       background:
         linear-gradient(180deg, transparent 0%, rgba(13, 13, 13, 0.72) 100%),
-        url("IMAGES/2.jpg") center/cover;
+        url("https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg") center/cover;
       position: relative;
     }
     .about-media::after {
@@ -385,7 +385,7 @@
   <header class="navbar">
     <div class="container nav-inner">
       <a class="brand" href="#home" aria-label="IYERVAL FOODS home">
-        <img src="ASSETS/1.png" alt="IYERVAL FOODS logo" />
+        <img src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="IYERVAL FOODS logo" />
         <div class="brand-copy">
           <strong>IYERVAL FOODS</strong>
           <span>Authentic Taste. Pure Tradition.</span>
@@ -402,20 +402,15 @@
       </nav>
 
       <div class="nav-actions">
-        <button class="ghost-btn" id="adminToggleBtn" type="button">Admin Orders</button>
-        <img class="nav-mini-logo" src="ASSETS/2.png" alt="IYERVAL FOODS mini logo" />
-        <button class="icon-btn" id="navCartBtn" type="button" aria-label="Open cart">
-          <span aria-hidden="true">Cart</span>
-          <span class="cart-count" id="navCartCount">0</span>
-        </button>
-        <button class="icon-btn hamburger" id="hamburgerBtn" type="button" aria-label="Toggle mobile menu" aria-expanded="false">
-          <div>
-            <span></span>
-            <span></span>
-            <span></span>
-          </div>
-        </button>
-      </div>
+  <button class="ghost-btn" id="adminToggleBtn" type="button">Admin Orders</button>
+  <img class="nav-mini-logo" 
+       src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/2.png" 
+       alt="IYERVAL FOODS mini logo" />
+  <button class="icon-btn" id="navCartBtn" type="button" aria-label="Open cart">
+    <span aria-hidden="true">Cart</span>
+    <span class="cart-count" id="navCartCount">0</span>
+  </button> 
+</div>
     </div>
   </header>
 
@@ -623,12 +618,12 @@
   <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
   <script>
     const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
-    const menuItems = [
-      { id: 1, name: "Curd Chilli", category: "Snacks", price: 220, description: "Sun-dried curd chillies with bold spice, deep savoury notes, and a crisp finish.", image: "IMAGES/1.jpg" },
-      { id: 2, name: "Karuvadam Basket", category: "Snacks", price: 240, description: "Classic crunchy karuvadam served in a premium snack portion for sharing.", image: "IMAGES/2.jpg" },
-      { id: 3, name: "Avakaya Mango Pickle", category: "Meals", price: 260, description: "A rich Andhra-style mango pickle with a balanced heat and aromatic sesame oil.", image: "IMAGES/5.jpg" },
-      { id: 4, name: "Vadam Selection", category: "Snacks", price: 210, description: "Crisp hand-fried vadam with a light, airy bite and signature spice seasoning.", image: "IMAGES/4.jpg" }
-    ];
+   const menuItems = [
+  { id: 1, name: "Curd Chilli", category: "Snacks", price: 220, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/1.jpg" },
+  { id: 2, name: "Karuvadam Basket", category: "Snacks", price: 240, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg" },
+  { id: 3, name: "Avakaya Mango Pickle", category: "Meals", price: 260, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/5.jpg" },
+  { id: 4, name: "Vadam Selection", category: "Snacks", price: 210, description: "...", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/4.jpg" }
+];
 
     let selectedFilter = "All";
     let cart = loadState(STORAGE_KEYS.cart, []);
@@ -896,32 +891,34 @@
       const orderDraft = buildOrder(formData, "paid");
 
       const options = {
-        key: "YOUR_RAZORPAY_KEY",
-        amount: totalAmount * 100,
-        currency: "INR",
-        name: "IYERVAL FOODS",
-        description: "Order Payment",
-        handler: function (response) {
-          orderDraft.paymentStatus = "paid";
-          orderDraft.razorpayPaymentId = response.razorpay_payment_id || "";
-          finalizeOrder(orderDraft);
-          alert("Payment successful!");
-        },
-        prefill: {
-          name: customerName,
-          contact: customerPhone
-        },
-        theme: {
-          color: "#ff8c00"
-        }
-      };
+  key: "rzp_live_xxxxxxxxxx", // 🔥 YOUR LIVE KEY
+  amount: totalAmount * 100,
+  currency: "INR",
+  name: "IYERVAL FOODS",
+  description: "Order Payment",
 
-      const razorpay = new Razorpay(options);
-      razorpay.on("payment.failed", function () {
-        alert("Payment failed. Try again.");
-      });
-      razorpay.open();
+  handler: function (response) {
+    orderDraft.paymentStatus = "paid";
+    orderDraft.razorpayPaymentId = response.razorpay_payment_id || "";
+    finalizeOrder(orderDraft);
+    alert("Payment successful!");
+  },
+
+  prefill: {
+    name: customerName,
+    contact: customerPhone
+  },
+
+  theme: {
+    color: "#ff8c00"
+  },
+
+  modal: {
+    ondismiss: function () {
+      alert("Payment cancelled");
     }
+  }
+};
 
     function placeOrder(event) {
       event.preventDefault();
