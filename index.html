@@ -914,19 +914,11 @@ function startUPIPayment() {
 
   const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
 
-  setTimeout(() => {
-  alert("After completing payment, click OK to confirm");
-  
-  const confirmPay = confirm("Did you complete the payment?");
-  
-  if (confirmPay) {
-    const order = buildOrder(formData, "paid");
-    finalizeOrder(order);
-  } else {
-    alert("Payment not confirmed");
-  }
-}, 2000);  
+  window.location.href = upiLink;
 
+setTimeout(() => {
+  finalizeOrder(order);
+}, 2000);
   // ✅ THIS LINE WAS MISSING
 
 /* ⛔ THIS COMES AFTER */
