@@ -1,0 +1,1040 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>IYERVAL FOODS | Premium Ordering Experience</title>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --panel: rgba(255, 255, 255, 0.08);
+      --border: rgba(255, 255, 255, 0.12);
+      --text: #f8f5ef;
+      --muted: rgba(248, 245, 239, 0.72);
+      --accent: #ff8c00;
+      --accent-soft: #ffb347;
+      --shadow: 0 24px 70px rgba(0, 0, 0, 0.38);
+      --radius: 24px;
+      --container: min(1180px, calc(100vw - 2rem));
+      --nav-h: 84px;
+      --ease: 260ms ease-in-out;
+      scroll-behavior: smooth;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: "Segoe UI", "Trebuchet MS", sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(255, 140, 0, 0.2), transparent 26%),
+        radial-gradient(circle at top right, rgba(255, 179, 71, 0.14), transparent 20%),
+        linear-gradient(180deg, #0d0d0d 0%, #121212 52%, #0d0d0d 100%);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    body.menu-open, body.cart-open, body.modal-open { overflow: hidden; }
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+    button, input, textarea { font: inherit; }
+
+    .loading-screen {
+      position: fixed; inset: 0; display: grid; place-items: center; z-index: 1200;
+      background: linear-gradient(135deg, #0d0d0d, #181818);
+      transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+    .loading-screen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+    .loading-mark { text-align: center; display: grid; gap: 1rem; }
+    .loading-ring {
+      width: 88px; height: 88px; margin: 0 auto; border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.08); border-top-color: var(--accent);
+      animation: spin 1s linear infinite;
+    }
+    .loading-mark span { letter-spacing: 0.35em; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; }
+
+    .container { width: var(--container); margin: 0 auto; }
+    .navbar {
+      position: sticky; top: 0; z-index: 900;
+      backdrop-filter: blur(20px);
+      background: linear-gradient(180deg, rgba(13, 13, 13, 0.88), rgba(13, 13, 13, 0.55));
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .nav-inner { min-height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { display: inline-flex; align-items: center; gap: 0.9rem; min-width: 0; }
+    .brand img {
+      width: 58px; height: 58px; object-fit: cover; border-radius: 18px;
+      box-shadow: 0 10px 24px rgba(255, 140, 0, 0.15);
+    }
+    .brand-copy strong {
+      display: block; font-size: 0.95rem; letter-spacing: 0.18em; text-transform: uppercase;
+    }
+    .brand-copy span {
+      display: block; font-size: 0.76rem; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+    }
+
+    .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+    .nav-links a,
+    .nav-actions button,
+    .hero-actions button,
+    .filter-btn,
+    .menu-card button,
+    .panel-btn,
+    .checkout-btn,
+    .close-btn,
+    .quantity-btn,
+    .remove-btn,
+    .submit-btn {
+      transition: transform var(--ease), background var(--ease), border-color var(--ease), color var(--ease), box-shadow var(--ease), opacity var(--ease);
+    }
+    .nav-links a { font-size: 0.96rem; color: rgba(248, 245, 239, 0.84); position: relative; }
+    .nav-links a::after {
+      content: ""; position: absolute; left: 0; bottom: -0.5rem; width: 100%; height: 2px;
+      background: linear-gradient(90deg, var(--accent), transparent);
+      transform: scaleX(0); transform-origin: left; transition: transform var(--ease);
+    }
+    .nav-links a:hover::after, .nav-links a:focus-visible::after { transform: scaleX(1); }
+    .nav-actions { display: flex; align-items: center; gap: 0.9rem; }
+
+    .icon-btn, .ghost-btn, .solid-btn {
+      border: 1px solid var(--border); border-radius: 999px; background: rgba(255, 255, 255, 0.04); color: var(--text); cursor: pointer;
+    }
+    .icon-btn {
+      width: 48px; height: 48px; display: inline-grid; place-items: center; position: relative;
+    }
+    .icon-btn:hover, .ghost-btn:hover, .solid-btn:hover, .menu-card button:hover, .filter-btn:hover,
+    .checkout-btn:hover, .submit-btn:hover, .quantity-btn:hover, .remove-btn:hover, .panel-btn:hover {
+      transform: translateY(-2px);
+    }
+    .ghost-btn, .solid-btn, .checkout-btn, .submit-btn, .panel-btn { padding: 0.95rem 1.25rem; }
+    .solid-btn, .checkout-btn, .submit-btn, .menu-card button {
+      background: linear-gradient(135deg, var(--accent), var(--accent-soft));
+      color: #1a1204; border: 0; font-weight: 700; box-shadow: 0 16px 34px rgba(255, 140, 0, 0.24);
+    }
+    .ghost-btn, .panel-btn, .filter-btn, .close-btn, .quantity-btn, .remove-btn {
+      background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border); color: var(--text);
+    }
+    .hamburger { display: none; width: 48px; height: 48px; border-radius: 16px; }
+    .hamburger span {
+      display: block; width: 18px; height: 2px; background: var(--text); margin: 3px auto;
+      transition: transform var(--ease), opacity var(--ease);
+    }
+    .cart-count {
+      position: absolute; right: -4px; top: -4px; min-width: 22px; height: 22px; padding: 0 0.35rem;
+      display: grid; place-items: center; border-radius: 999px; background: var(--accent);
+      color: #1a1204; font-weight: 800; font-size: 0.75rem;
+    }
+
+    .hero {
+      min-height: calc(100svh - var(--nav-h)); position: relative; display: grid; align-items: center; overflow: hidden;
+    }
+    .hero::before {
+      content: ""; position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 18% 28%, rgba(255, 140, 0, 0.22), transparent 24%),
+        linear-gradient(100deg, rgba(13, 13, 13, 0.94) 18%, rgba(13, 13, 13, 0.72) 55%, rgba(13, 13, 13, 0.9) 100%);
+      transform: scale(1.05); animation: heroZoom 10s ease-out forwards;
+    }
+    .hero::after {
+      content: ""; position: absolute; inset: auto 0 0; height: 180px;
+      background: linear-gradient(180deg, transparent, rgba(13, 13, 13, 0.92));
+    }
+    .hero-grid {
+      position: relative; z-index: 1; display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(280px, 0.85fr);
+      gap: 2rem; align-items: center; padding: 5rem 0 4rem;
+    }
+    .hero-copy { max-width: 620px; animation: fadeUp 1s ease both; }
+    .eyebrow {
+      display: inline-block; margin-bottom: 1rem; padding: 0.6rem 1rem; border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05);
+      color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; font-size: 0.78rem;
+    }
+    .hero h1 {
+      font-size: clamp(3rem, 7vw, 6rem); line-height: 0.95; letter-spacing: -0.05em; margin-bottom: 1.25rem; text-transform: uppercase;
+    }
+    .hero h1 span { display: block; color: var(--accent-soft); }
+    .hero p {
+      color: rgba(248, 245, 239, 0.84); max-width: 560px; font-size: 1.08rem; line-height: 1.75; margin-bottom: 1.8rem;
+    }
+    .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
+    .hero-card {
+      justify-self: end; width: min(100%, 400px); border-radius: 30px; overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(20px); box-shadow: var(--shadow); animation: fadeUp 1.2s ease 0.1s both;
+    }
+    .hero-card-media {
+      aspect-ratio: 1 / 1.05;
+      background:
+        linear-gradient(180deg, transparent 0%, rgba(13, 13, 13, 0.6) 100%),
+        url("ASSETS/ITEM MENU.png") center/cover;
+    }
+    .hero-main-logo {
+      width: min(100%, 360px);
+      margin-bottom: 1.25rem;
+      border-radius: 28px;
+      box-shadow: 0 26px 60px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04);
+    }
+    .nav-mini-logo {
+      width: 42px;
+      height: 42px;
+      object-fit: cover;
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: 0 12px 24px rgba(255, 140, 0, 0.14);
+    }
+    .hero-card-content { padding: 1.4rem; display: grid; gap: 0.7rem; }
+    .hero-card-content small { color: var(--muted); text-transform: uppercase; letter-spacing: 0.16em; }
+    .hero-card-content strong { font-size: 1.2rem; }
+    .hero-card-content p { margin: 0; font-size: 0.95rem; color: var(--muted); line-height: 1.6; }
+
+    section { padding: 6rem 0; position: relative; }
+    .section-head { display: grid; gap: 0.9rem; margin-bottom: 2rem; max-width: 760px; }
+    .section-head h2 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; letter-spacing: -0.04em; }
+    .section-head p { color: var(--muted); line-height: 1.8; max-width: 620px; }
+
+    .about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 420px); gap: 2rem; align-items: stretch; }
+    .about-copy, .about-media, .admin-panel, .contact-card, .confirmation-card, .cart-panel, .modal-card {
+      border: 1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.04));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+    .about-copy { padding: 2rem; display: grid; gap: 1rem; }
+    .about-copy p { color: var(--muted); line-height: 1.85; }
+    .about-points { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 0.5rem; }
+    .about-points article {
+      padding: 1rem; border-radius: 20px; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .about-points strong { display: block; margin-bottom: 0.5rem; color: var(--accent-soft); }
+    .about-points span { color: var(--muted); font-size: 0.94rem; line-height: 1.6; }
+    .about-media {
+      overflow: hidden; min-height: 420px;
+      background:
+        linear-gradient(180deg, transparent 0%, rgba(13, 13, 13, 0.72) 100%),
+        url("IMAGES/2.jpg") center/cover;
+      position: relative;
+    }
+    .about-media::after {
+      content: "Traditional flavour, modern craft";
+      position: absolute; left: 1.4rem; right: 1.4rem; bottom: 1.4rem; padding: 1rem 1.1rem;
+      border-radius: 18px; background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.12);
+      backdrop-filter: blur(8px); font-weight: 700; letter-spacing: 0.04em;
+    }
+
+    .filter-row { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 2rem; }
+    .filter-btn.active {
+      background: rgba(255, 140, 0, 0.18); color: var(--accent-soft);
+      border-color: rgba(255, 140, 0, 0.35); box-shadow: 0 14px 30px rgba(255, 140, 0, 0.12);
+    }
+    .menu-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 1.25rem; }
+    .menu-card {
+      border-radius: 28px; overflow: hidden; border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04); transform: translateY(0); box-shadow: 0 18px 32px rgba(0, 0, 0, 0.16);
+    }
+    .menu-card:hover { transform: translateY(-10px); box-shadow: 0 28px 54px rgba(0, 0, 0, 0.26); }
+    .menu-card-media { position: relative; overflow: hidden; aspect-ratio: 1 / 0.92; }
+    .menu-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 600ms ease; }
+    .menu-card:hover .menu-card-media img { transform: scale(1.08); }
+    .menu-tag {
+      position: absolute; left: 0.9rem; top: 0.9rem; padding: 0.45rem 0.8rem; border-radius: 999px;
+      background: rgba(13, 13, 13, 0.72); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12);
+      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .menu-card-body { padding: 1.2rem; display: grid; gap: 0.85rem; }
+    .menu-card-top { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
+    .menu-card h3 { font-size: 1.1rem; line-height: 1.25; }
+    .price { color: var(--accent-soft); font-weight: 800; white-space: nowrap; }
+    .menu-card p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
+    .menu-card button { width: 100%; padding: 0.95rem 1rem; border-radius: 16px; cursor: pointer; }
+
+    .contact-card, .admin-panel, .confirmation-card { padding: 2rem; }
+    .contact-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
+    .contact-card p, .contact-card a, .admin-panel p, .confirmation-card p { color: var(--muted); line-height: 1.8; }
+    .contact-card strong {
+      display: block; margin-bottom: 0.8rem; color: var(--accent-soft);
+      text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.8rem;
+    }
+
+    .admin-panel { margin-top: 1.5rem; display: none; gap: 1.2rem; }
+    .admin-panel.visible { display: grid; }
+    .orders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+    .order-card {
+      border-radius: 22px; border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.04); padding: 1.2rem; display: grid; gap: 0.8rem;
+    }
+    .order-meta { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
+    .order-meta strong { font-size: 1rem; }
+    .order-meta span, .order-items li, .cart-empty, .cart-note { color: var(--muted); }
+    .order-items { list-style: none; display: grid; gap: 0.55rem; padding-left: 0; }
+    .order-items li {
+      display: flex; justify-content: space-between; gap: 0.75rem;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08); padding-bottom: 0.45rem; font-size: 0.94rem;
+    }
+
+    .reveal { opacity: 0; transform: translateY(40px); transition: opacity 700ms ease, transform 700ms ease; }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    .cart-fab {
+      position: fixed; top: 98px; right: 1rem; z-index: 930; display: inline-flex; align-items: center; gap: 0.85rem;
+      padding: 0.9rem 1.05rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); color: var(--text);
+      box-shadow: var(--shadow); cursor: pointer;
+    }
+    .cart-fab strong { font-size: 0.95rem; }
+
+    .cart-panel {
+      position: fixed; top: 0; right: 0; width: min(460px, 100vw); height: 100vh; z-index: 1100;
+      border-radius: 30px 0 0 30px; transform: translateX(106%);
+      transition: transform 460ms cubic-bezier(0.2, 0.8, 0.2, 1); display: grid; grid-template-rows: auto 1fr auto;
+    }
+    .cart-panel.open { transform: translateX(0); }
+    .cart-header, .cart-footer { padding: 1.25rem 1.25rem 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .cart-footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08); border-bottom: 0; display: grid; gap: 1rem;
+      background: rgba(13, 13, 13, 0.4);
+    }
+    .cart-head-row, .cart-total { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
+    .cart-body { padding: 1rem 1.25rem 1.25rem; overflow-y: auto; display: grid; gap: 1rem; align-content: start; }
+    .cart-item {
+      display: grid; gap: 0.85rem; padding: 1rem; border-radius: 22px;
+      background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .cart-item-head, .quantity-row { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+    .quantity-controls { display: inline-flex; align-items: center; gap: 0.55rem; }
+    .quantity-btn, .remove-btn, .close-btn { cursor: pointer; border-radius: 14px; padding: 0.55rem 0.8rem; }
+    .quantity-btn { min-width: 38px; min-height: 38px; display: grid; place-items: center; }
+    .cart-item-price, .highlight { color: var(--accent-soft); font-weight: 800; }
+
+    .backdrop, .modal {
+      position: fixed; inset: 0; z-index: 1000; opacity: 0; pointer-events: none; transition: opacity var(--ease);
+    }
+    .backdrop.visible, .modal.visible { opacity: 1; pointer-events: auto; }
+    .backdrop { background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(8px); }
+    .modal { display: grid; place-items: center; padding: 1rem; z-index: 1150; }
+    .modal-card {
+      width: min(560px, 100%); max-height: calc(100vh - 2rem); overflow-y: auto; padding: 1.6rem;
+      display: grid; gap: 1rem; transform: translateY(24px) scale(0.98); transition: transform var(--ease);
+    }
+    .modal.visible .modal-card { transform: translateY(0) scale(1); }
+    .modal-top { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
+    .checkout-form { display: grid; gap: 0.95rem; }
+    .checkout-form label { display: grid; gap: 0.45rem; font-size: 0.94rem; color: var(--muted); }
+    .checkout-form input, .checkout-form textarea {
+      width: 100%; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06); color: var(--text); padding: 0.95rem 1rem; resize: vertical; min-height: 54px;
+    }
+    .checkout-form textarea { min-height: 120px; }
+    .checkout-summary, .confirmation-summary {
+      border-radius: 20px; padding: 1rem; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08); display: grid; gap: 0.75rem;
+    }
+    .summary-list { list-style: none; display: grid; gap: 0.55rem; }
+    .summary-list li { display: flex; justify-content: space-between; gap: 0.75rem; color: var(--muted); font-size: 0.94rem; }
+    .summary-foot {
+      display: flex; justify-content: space-between; gap: 1rem; padding-top: 0.4rem;
+      border-top: 1px dashed rgba(255, 255, 255, 0.12); font-weight: 700;
+    }
+    .footer { padding: 1.5rem 0 2rem; color: var(--muted); font-size: 0.92rem; }
+    .footer-inner {
+      display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 1.5rem; flex-wrap: wrap;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(38px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heroZoom { to { transform: scale(1); } }
+
+    @media (max-width: 980px) {
+      .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; }
+      .menu-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero-card { justify-self: start; }
+      .nav-links {
+        position: fixed; inset: var(--nav-h) 1rem auto; flex-direction: column; align-items: stretch; padding: 1rem;
+        border-radius: 24px; background: rgba(13, 13, 13, 0.96); border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: var(--shadow); transform: translateY(-16px); opacity: 0; pointer-events: none;
+      }
+      .nav-links.open { transform: translateY(0); opacity: 1; pointer-events: auto; }
+      .hamburger { display: inline-grid; place-items: center; }
+    }
+
+    @media (max-width: 720px) {
+      :root { --container: min(100vw - 1.2rem, 1180px); }
+      .brand-copy span, .ghost-btn span { display: none; }
+      .nav-actions .ghost-btn { padding-inline: 0.95rem; }
+      .menu-grid, .about-points { grid-template-columns: 1fr; }
+      section { padding: 4.5rem 0; }
+      .hero-grid { padding: 4rem 0 3rem; }
+      .hero-actions, .filter-row, .footer-inner { flex-direction: column; align-items: stretch; }
+      .cart-fab { right: 0.75rem; left: 0.75rem; justify-content: space-between; }
+    }
+  </style>
+</head>
+<body>
+  <div class="loading-screen" id="loadingScreen" aria-hidden="true">
+    <div class="loading-mark">
+      <div class="loading-ring"></div>
+      <span>Preparing your table</span>
+    </div>
+  </div>
+
+  <header class="navbar">
+    <div class="container nav-inner">
+      <a class="brand" href="#home" aria-label="IYERVAL FOODS home">
+        <img src="ASSETS/1.png" alt="IYERVAL FOODS logo" />
+        <div class="brand-copy">
+          <strong>IYERVAL FOODS</strong>
+          <span>Authentic Taste. Pure Tradition.</span>
+        </div>
+      </a>
+
+      <nav aria-label="Primary navigation">
+        <ul class="nav-links" id="navLinks">
+          <li><a href="#home">Home</a></li>
+          <li><a href="#menu">Menu</a></li>
+          <li><a href="#about">About</a></li>
+          <li><a href="#contact">Contact</a></li>
+        </ul>
+      </nav>
+
+      <div class="nav-actions">
+        <button class="ghost-btn" id="adminToggleBtn" type="button">Admin Orders</button>
+        <img class="nav-mini-logo" src="ASSETS/2.png" alt="IYERVAL FOODS mini logo" />
+        <button class="icon-btn" id="navCartBtn" type="button" aria-label="Open cart">
+          <span aria-hidden="true">Cart</span>
+          <span class="cart-count" id="navCartCount">0</span>
+        </button>
+        <button class="icon-btn hamburger" id="hamburgerBtn" type="button" aria-label="Toggle mobile menu" aria-expanded="false">
+          <div>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <button class="cart-fab" id="cartFab" type="button" aria-label="Open cart">
+    <strong>Cart</strong>
+    <span class="highlight" id="fabCartLabel">0 items</span>
+  </button>
+
+  <main>
+    <section class="hero" id="home">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <img class="hero-main-logo" src="ASSETS/1.png" alt="IYERVAL FOODS main logo" />
+          <span class="eyebrow">Premium South Indian Pantry & Kitchen</span>
+          <h1>Tradition, plated <span>for today.</span></h1>
+          <p>
+            Browse curated signature products from IYERVAL FOODS, add your favourites to cart,
+            and place your order in a smooth premium flow that saves every customer detail and order record.
+          </p>
+          <div class="hero-actions">
+            <button class="solid-btn" type="button" data-scroll="#menu">Order Now</button>
+            <button class="ghost-btn" type="button" data-scroll="#about">Discover the Story</button>
+          </div>
+        </div>
+
+        <aside class="hero-card" aria-label="Featured menu preview">
+          <div class="hero-card-media"></div>
+          <div class="hero-card-content">
+            <small>Chef's Board</small>
+            <strong>Curd Chilli, Vadam, Pickles & More</strong>
+            <p>Small-batch flavours with a modern storefront, a persistent cart, and an admin-ready order dashboard.</p>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="reveal" id="about">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">About</span>
+          <h2>Rooted in heritage, served with polish.</h2>
+          <p>
+            IYERVAL FOODS blends authentic recipes with a contemporary ordering experience, giving guests a clean,
+            premium way to explore products, customise quantities, and place orders that stay safely stored.
+          </p>
+        </div>
+
+        <div class="about-grid">
+          <div class="about-copy">
+            <p>
+              This storefront is built for discovery and repeat ordering. Guests can filter items by category,
+              manage quantities from a whoosh-style slide-in cart, and complete checkout with name, phone, address,
+              and optional notes. Orders are stored locally so the experience remains fast and simple.
+            </p>
+            <div class="about-points">
+              <article><strong>Premium Flow</strong><span>Glassmorphism panels, rounded surfaces, smooth reveal animation, and responsive layout.</span></article>
+              <article><strong>Reliable Ordering</strong><span>Cart state and order history are saved in <code>localStorage</code> for continuity.</span></article>
+              <article><strong>Admin Ready</strong><span>Hidden order board shows customer details, ordered items, totals, and timestamps.</span></article>
+              <article><strong>Single File</strong><span>Everything lives in one HTML file with embedded CSS and JavaScript, no frameworks used.</span></article>
+            </div>
+          </div>
+          <div class="about-media" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="reveal" id="menu">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Menu</span>
+          <h2>Curated for every craving.</h2>
+          <p>Filter the collection, explore signature products, and add items to your cart in a single click.</p>
+        </div>
+
+        <div class="filter-row" id="filterRow">
+          <button class="filter-btn active" type="button" data-filter="All">All</button>
+          <button class="filter-btn" type="button" data-filter="Meals">Meals</button>
+          <button class="filter-btn" type="button" data-filter="Snacks">Snacks</button>
+          <button class="filter-btn" type="button" data-filter="Drinks">Drinks</button>
+        </div>
+
+        <div class="menu-grid" id="menuGrid" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section class="reveal" id="contact">
+      <div class="container">
+        <div class="section-head">
+          <span class="eyebrow">Contact</span>
+          <h2>Every order captured, every detail ready.</h2>
+          <p>
+            The checkout flow stores customer name, phone, address, notes, selected items, total amount, and timestamp.
+            Admin view is hidden by default and can be opened from the button in the navigation.
+          </p>
+        </div>
+
+        <div class="contact-grid">
+          <div class="contact-card"><strong>Ordering</strong><p>Choose products, adjust quantities in the cart, then complete checkout with your delivery details.</p></div>
+          <div class="contact-card"><strong>Storage</strong><p>Cart is saved as <code>iyerval-cart</code> and orders are saved as <code>orders</code> in localStorage.</p></div>
+          <div class="contact-card"><strong>Admin Access</strong><p>Use the <code>Admin Orders</code> button to reveal the stored order board at the bottom of this page.</p></div>
+        </div>
+
+        <div class="admin-panel" id="adminPanel">
+          <div class="cart-head-row">
+            <div>
+              <span class="eyebrow">Hidden Admin View</span>
+              <h3 style="margin-top: 0.4rem;">Stored Orders</h3>
+            </div>
+            <button class="panel-btn" id="refreshOrdersBtn" type="button">Refresh Orders</button>
+          </div>
+          <p>Every placed order is shown here with customer information, purchased items, total, and recorded time.</p>
+          <div class="orders-grid" id="ordersGrid"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>IYERVAL FOODS premium ordering website</span>
+      <span>Built with HTML, CSS, and JavaScript only</span>
+    </div>
+  </footer>
+
+  <div class="backdrop" id="backdrop"></div>
+
+  <aside class="cart-panel" id="cartPanel" aria-label="Shopping cart">
+    <div class="cart-header">
+      <div class="cart-head-row">
+        <div>
+          <span class="eyebrow">Your Cart</span>
+          <h3 style="margin-top: 0.45rem;">Freshly selected favourites</h3>
+        </div>
+        <button class="close-btn" id="closeCartBtn" type="button">Close</button>
+      </div>
+    </div>
+    <div class="cart-body" id="cartItemsContainer">
+      <p class="cart-empty">Your cart is empty. Add a few signature items to begin.</p>
+    </div>
+    <div class="cart-footer">
+      <div class="cart-total">
+        <span>Total</span>
+        <strong class="highlight" id="cartTotal">Rs.0.00</strong>
+      </div>
+      <p class="cart-note">Orders are captured locally along with customer details for later admin review.</p>
+      <button class="checkout-btn" id="checkoutBtn" type="button">Checkout</button>
+    </div>
+  </aside>
+
+  <div class="modal" id="checkoutModal" aria-hidden="true">
+    <div class="modal-card">
+      <div class="modal-top">
+        <div>
+          <span class="eyebrow">Checkout</span>
+          <h3 style="margin-top: 0.45rem;">Delivery details</h3>
+        </div>
+        <button class="close-btn" id="closeCheckoutBtn" type="button">Close</button>
+      </div>
+      <div class="checkout-summary">
+        <h4>Order summary</h4>
+        <ul class="summary-list" id="checkoutSummaryList"></ul>
+        <div class="summary-foot">
+          <span>Total</span>
+          <span id="checkoutSummaryTotal">Rs.0.00</span>
+        </div>
+      </div>
+      <form class="checkout-form" id="checkoutForm">
+        <label>
+          Name *
+          <input type="text" name="name" placeholder="Enter your full name" required />
+        </label>
+        <label>
+          Phone Number *
+          <input type="tel" name="phone" placeholder="Enter your phone number" required />
+        </label>
+        <label>
+          Address *
+          <textarea name="address" placeholder="Enter full delivery address" required></textarea>
+        </label>
+        <label>
+          Notes
+          <textarea name="notes" placeholder="Add any delivery notes or preferences"></textarea>
+        </label>
+        <button class="submit-btn" id="payNowBtn" type="button">Pay Now</button>
+        <button class="ghost-btn" type="submit">Place Order</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="confirmationModal" aria-hidden="true">
+    <div class="modal-card confirmation-card">
+      <div class="modal-top">
+        <div>
+          <span class="eyebrow">Order Confirmed</span>
+          <h3 style="margin-top: 0.45rem;">Order Placed Successfully</h3>
+        </div>
+        <button class="close-btn" id="closeConfirmationBtn" type="button">Close</button>
+      </div>
+      <p>Your order has been saved successfully. The summary below is stored in the admin order board as well.</p>
+      <div class="confirmation-summary" id="confirmationSummary"></div>
+      <button class="submit-btn" id="continueBrowsingBtn" type="button">Continue Browsing</button>
+    </div>
+  </div>
+
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+  <script>
+    const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders" };
+    const menuItems = [
+      { id: 1, name: "Curd Chilli", category: "Snacks", price: 220, description: "Sun-dried curd chillies with bold spice, deep savoury notes, and a crisp finish.", image: "IMAGES/1.jpg" },
+      { id: 2, name: "Karuvadam Basket", category: "Snacks", price: 240, description: "Classic crunchy karuvadam served in a premium snack portion for sharing.", image: "IMAGES/2.jpg" },
+      { id: 3, name: "Avakaya Mango Pickle", category: "Meals", price: 260, description: "A rich Andhra-style mango pickle with a balanced heat and aromatic sesame oil.", image: "IMAGES/5.jpg" },
+      { id: 4, name: "Vadam Selection", category: "Snacks", price: 210, description: "Crisp hand-fried vadam with a light, airy bite and signature spice seasoning.", image: "IMAGES/4.jpg" }
+    ];
+
+    let selectedFilter = "All";
+    let cart = loadState(STORAGE_KEYS.cart, []);
+    let orders = loadState(STORAGE_KEYS.orders, []);
+
+    const menuGrid = document.getElementById("menuGrid");
+    const navLinks = document.getElementById("navLinks");
+    const hamburgerBtn = document.getElementById("hamburgerBtn");
+    const adminToggleBtn = document.getElementById("adminToggleBtn");
+    const adminPanel = document.getElementById("adminPanel");
+    const ordersGrid = document.getElementById("ordersGrid");
+    const refreshOrdersBtn = document.getElementById("refreshOrdersBtn");
+    const cartFab = document.getElementById("cartFab");
+    const navCartBtn = document.getElementById("navCartBtn");
+    const navCartCount = document.getElementById("navCartCount");
+    const fabCartLabel = document.getElementById("fabCartLabel");
+    const cartPanel = document.getElementById("cartPanel");
+    const cartItemsContainer = document.getElementById("cartItemsContainer");
+    const cartTotal = document.getElementById("cartTotal");
+    const checkoutBtn = document.getElementById("checkoutBtn");
+    const closeCartBtn = document.getElementById("closeCartBtn");
+    const backdrop = document.getElementById("backdrop");
+    const checkoutModal = document.getElementById("checkoutModal");
+    const closeCheckoutBtn = document.getElementById("closeCheckoutBtn");
+    const checkoutForm = document.getElementById("checkoutForm");
+    const payNowBtn = document.getElementById("payNowBtn");
+    const checkoutSummaryList = document.getElementById("checkoutSummaryList");
+    const checkoutSummaryTotal = document.getElementById("checkoutSummaryTotal");
+    const confirmationModal = document.getElementById("confirmationModal");
+    const closeConfirmationBtn = document.getElementById("closeConfirmationBtn");
+    const continueBrowsingBtn = document.getElementById("continueBrowsingBtn");
+    const confirmationSummary = document.getElementById("confirmationSummary");
+    const loadingScreen = document.getElementById("loadingScreen");
+
+    function loadState(key, fallback) {
+      try {
+        const raw = localStorage.getItem(key);
+        return raw ? JSON.parse(raw) : fallback;
+      } catch (error) {
+        console.warn("Storage load failed:", error);
+        return fallback;
+      }
+    }
+
+    function saveState(key, value) { localStorage.setItem(key, JSON.stringify(value)); }
+    function formatCurrency(value) { return `Rs.${Number(value).toFixed(2)}`; }
+    function formatDate(timestamp) { return new Date(timestamp).toLocaleString("en-IN", { dateStyle: "medium", timeStyle: "short" }); }
+    function getCartCount() { return cart.reduce((sum, item) => sum + item.quantity, 0); }
+    function getCartTotal() { return cart.reduce((sum, item) => sum + item.price * item.quantity, 0); }
+
+    function renderMenu() {
+      const filtered = selectedFilter === "All" ? menuItems : menuItems.filter((item) => item.category === selectedFilter);
+      menuGrid.innerHTML = filtered.map((item) => `
+        <article class="menu-card reveal visible">
+          <div class="menu-card-media">
+            <img src="${item.image}" alt="${item.name}" loading="lazy" />
+            <span class="menu-tag">${item.category}</span>
+          </div>
+          <div class="menu-card-body">
+            <div class="menu-card-top">
+              <h3>${item.name}</h3>
+              <span class="price">${formatCurrency(item.price)}</span>
+            </div>
+            <p>${item.description}</p>
+            <button type="button" data-id="${item.id}">Add to Cart</button>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderCart() {
+      const total = getCartTotal();
+      const count = getCartCount();
+      navCartCount.textContent = count;
+      fabCartLabel.textContent = `${count} ${count === 1 ? "item" : "items"}`;
+      cartTotal.textContent = formatCurrency(total);
+      checkoutBtn.disabled = cart.length === 0;
+      checkoutBtn.style.opacity = cart.length === 0 ? "0.55" : "1";
+
+      if (!cart.length) {
+        cartItemsContainer.innerHTML = `<p class="cart-empty">Your cart is empty. Add a few signature items to begin.</p>`;
+        return;
+      }
+
+      cartItemsContainer.innerHTML = cart.map((item) => `
+        <article class="cart-item">
+          <div class="cart-item-head">
+            <div><strong>${item.name}</strong><div class="cart-item-price">${formatCurrency(item.price)}</div></div>
+            <button class="remove-btn" type="button" data-remove="${item.id}">Remove</button>
+          </div>
+          <div class="quantity-row">
+            <div class="quantity-controls">
+              <button class="quantity-btn" type="button" data-qty="${item.id}" data-change="-1">-</button>
+              <span>${item.quantity}</span>
+              <button class="quantity-btn" type="button" data-qty="${item.id}" data-change="1">+</button>
+            </div>
+            <strong>${formatCurrency(item.price * item.quantity)}</strong>
+          </div>
+        </article>
+      `).join("");
+    }
+
+    function renderCheckoutSummary() {
+      checkoutSummaryList.innerHTML = cart.map((item) => `
+        <li><span>${item.name} x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>
+      `).join("");
+      checkoutSummaryTotal.textContent = formatCurrency(getCartTotal());
+    }
+
+    function renderOrders() {
+      if (!orders.length) {
+        ordersGrid.innerHTML = `<article class="order-card"><strong>No orders yet</strong><p>Placed orders will appear here once checkout is completed.</p></article>`;
+        return;
+      }
+
+      ordersGrid.innerHTML = [...orders].reverse().map((order) => `
+        <article class="order-card">
+          <div class="order-meta"><div><strong>${order.name}</strong><span>${order.phone}</span></div><span>#${order.orderId}</span></div>
+          <p>${order.address}</p>
+          <ul class="order-items">
+            ${order.items.map((item) => `<li><span>${item.name} x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>`).join("")}
+          </ul>
+          ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}
+          <div class="order-meta"><span>${formatDate(order.timestamp)}</span><strong class="highlight">${formatCurrency(order.total)}</strong></div>
+        </article>
+      `).join("");
+    }
+
+    function addToCart(itemId) {
+      const item = menuItems.find((entry) => entry.id === Number(itemId));
+      if (!item) return;
+      const existing = cart.find((entry) => entry.id === item.id);
+      if (existing) existing.quantity += 1;
+      else cart.push({ ...item, quantity: 1 });
+      saveState(STORAGE_KEYS.cart, cart);
+      renderCart();
+      openCart();
+    }
+
+    function updateQuantity(itemId, change) {
+      cart = cart
+        .map((item) => item.id === Number(itemId) ? { ...item, quantity: item.quantity + Number(change) } : item)
+        .filter((item) => item.quantity > 0);
+      saveState(STORAGE_KEYS.cart, cart);
+      renderCart();
+      renderCheckoutSummary();
+    }
+
+    function removeCartItem(itemId) {
+      cart = cart.filter((item) => item.id !== Number(itemId));
+      saveState(STORAGE_KEYS.cart, cart);
+      renderCart();
+      renderCheckoutSummary();
+    }
+
+    function openCart() {
+      cartPanel.classList.add("open");
+      backdrop.classList.add("visible");
+      document.body.classList.add("cart-open");
+    }
+
+    function closeCart() {
+      cartPanel.classList.remove("open");
+      if (!checkoutModal.classList.contains("visible") && !confirmationModal.classList.contains("visible")) {
+        backdrop.classList.remove("visible");
+        document.body.classList.remove("cart-open");
+      }
+    }
+
+    function openCheckout() {
+      if (!cart.length) return;
+      renderCheckoutSummary();
+      checkoutModal.classList.add("visible");
+      checkoutModal.setAttribute("aria-hidden", "false");
+      backdrop.classList.add("visible");
+      document.body.classList.add("modal-open");
+    }
+
+    function closeCheckout() {
+      checkoutModal.classList.remove("visible");
+      checkoutModal.setAttribute("aria-hidden", "true");
+      if (!cartPanel.classList.contains("open") && !confirmationModal.classList.contains("visible")) {
+        backdrop.classList.remove("visible");
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    function openConfirmation(order) {
+      confirmationSummary.innerHTML = `
+        <div class="cart-head-row"><strong>Order ID</strong><span class="highlight">#${order.orderId}</span></div>
+        <p><strong>Name:</strong> ${order.name}</p>
+        <p><strong>Phone:</strong> ${order.phone}</p>
+        <p><strong>Address:</strong> ${order.address}</p>
+        ${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}
+        <ul class="summary-list">
+          ${order.items.map((item) => `<li><span>${item.name} x ${item.quantity}</span><span>${formatCurrency(item.price * item.quantity)}</span></li>`).join("")}
+        </ul>
+        <div class="summary-foot"><span>Total</span><span>${formatCurrency(order.total)}</span></div>
+        <p><strong>Timestamp:</strong> ${formatDate(order.timestamp)}</p>
+      `;
+      confirmationModal.classList.add("visible");
+      confirmationModal.setAttribute("aria-hidden", "false");
+      backdrop.classList.add("visible");
+      document.body.classList.add("modal-open");
+    }
+
+    function closeConfirmation() {
+      confirmationModal.classList.remove("visible");
+      confirmationModal.setAttribute("aria-hidden", "true");
+      if (!cartPanel.classList.contains("open") && !checkoutModal.classList.contains("visible")) {
+        backdrop.classList.remove("visible");
+        document.body.classList.remove("modal-open");
+      }
+    }
+
+    function buildOrder(formData, paymentStatus = "pending") {
+      const timestamp = Date.now();
+      return {
+        orderId: `IYF-${timestamp}`,
+        name: formData.get("name").toString().trim(),
+        phone: formData.get("phone").toString().trim(),
+        address: formData.get("address").toString().trim(),
+        notes: formData.get("notes").toString().trim(),
+        items: cart.map((item) => ({ id: item.id, name: item.name, price: item.price, quantity: item.quantity })),
+        total: getCartTotal(),
+        paymentStatus,
+        timestamp
+      };
+    }
+
+    function finalizeOrder(order) {
+      orders.push(order);
+      saveState(STORAGE_KEYS.orders, orders);
+      cart = [];
+      saveState(STORAGE_KEYS.cart, cart);
+
+      checkoutForm.reset();
+      renderCart();
+      renderOrders();
+      closeCheckout();
+      closeCart();
+      openConfirmation(order);
+      adminPanel.classList.add("visible");
+      adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function startRazorpayPayment() {
+      if (!cart.length) return;
+      const formData = new FormData(checkoutForm);
+      const customerName = formData.get("name").toString().trim();
+      const customerPhone = formData.get("phone").toString().trim();
+      const customerAddress = formData.get("address").toString().trim();
+
+      if (!customerName || !customerPhone || !customerAddress) {
+        checkoutForm.reportValidity();
+        return;
+      }
+
+      if (typeof Razorpay === "undefined") {
+        alert("Razorpay failed to load. Try again.");
+        return;
+      }
+
+      const totalAmount = getCartTotal();
+      const orderDraft = buildOrder(formData, "paid");
+
+      const options = {
+        key: "YOUR_RAZORPAY_KEY",
+        amount: totalAmount * 100,
+        currency: "INR",
+        name: "IYERVAL FOODS",
+        description: "Order Payment",
+        handler: function (response) {
+          orderDraft.paymentStatus = "paid";
+          orderDraft.razorpayPaymentId = response.razorpay_payment_id || "";
+          finalizeOrder(orderDraft);
+          alert("Payment successful!");
+        },
+        prefill: {
+          name: customerName,
+          contact: customerPhone
+        },
+        theme: {
+          color: "#ff8c00"
+        }
+      };
+
+      const razorpay = new Razorpay(options);
+      razorpay.on("payment.failed", function () {
+        alert("Payment failed. Try again.");
+      });
+      razorpay.open();
+    }
+
+    function placeOrder(event) {
+      event.preventDefault();
+      if (!cart.length) return;
+      const formData = new FormData(checkoutForm);
+      const order = buildOrder(formData, "unpaid");
+
+      if (!order.name || !order.phone || !order.address) {
+        checkoutForm.reportValidity();
+        return;
+      }
+
+      finalizeOrder(order);
+    }
+
+    function toggleAdminPanel() {
+      adminPanel.classList.toggle("visible");
+      renderOrders();
+      if (adminPanel.classList.contains("visible")) {
+        adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
+    }
+
+    function setupRevealAnimations() {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("visible");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.18 });
+
+      document.querySelectorAll(".reveal").forEach((element) => observer.observe(element));
+    }
+
+    function bindEvents() {
+      document.getElementById("filterRow").addEventListener("click", (event) => {
+        const button = event.target.closest("[data-filter]");
+        if (!button) return;
+        selectedFilter = button.dataset.filter;
+        document.querySelectorAll(".filter-btn").forEach((entry) => entry.classList.toggle("active", entry === button));
+        renderMenu();
+      });
+
+      menuGrid.addEventListener("click", (event) => {
+        const button = event.target.closest("[data-id]");
+        if (button) addToCart(button.dataset.id);
+      });
+
+      cartItemsContainer.addEventListener("click", (event) => {
+        const quantityBtn = event.target.closest("[data-qty]");
+        const removeBtn = event.target.closest("[data-remove]");
+        if (quantityBtn) updateQuantity(quantityBtn.dataset.qty, quantityBtn.dataset.change);
+        if (removeBtn) removeCartItem(removeBtn.dataset.remove);
+      });
+
+      [cartFab, navCartBtn].forEach((button) => button.addEventListener("click", openCart));
+      closeCartBtn.addEventListener("click", closeCart);
+      checkoutBtn.addEventListener("click", openCheckout);
+      closeCheckoutBtn.addEventListener("click", closeCheckout);
+      closeConfirmationBtn.addEventListener("click", closeConfirmation);
+      continueBrowsingBtn.addEventListener("click", closeConfirmation);
+      payNowBtn.addEventListener("click", startRazorpayPayment);
+      checkoutForm.addEventListener("submit", placeOrder);
+      adminToggleBtn.addEventListener("click", toggleAdminPanel);
+      refreshOrdersBtn.addEventListener("click", renderOrders);
+
+      backdrop.addEventListener("click", () => {
+        closeCart();
+        closeCheckout();
+        closeConfirmation();
+      });
+
+      hamburgerBtn.addEventListener("click", () => {
+        navLinks.classList.toggle("open");
+        const expanded = navLinks.classList.contains("open");
+        hamburgerBtn.setAttribute("aria-expanded", String(expanded));
+        document.body.classList.toggle("menu-open", expanded);
+      });
+
+      navLinks.addEventListener("click", (event) => {
+        if (event.target.tagName === "A") {
+          navLinks.classList.remove("open");
+          hamburgerBtn.setAttribute("aria-expanded", "false");
+          document.body.classList.remove("menu-open");
+        }
+      });
+
+      document.querySelectorAll("[data-scroll]").forEach((button) => {
+        button.addEventListener("click", () => {
+          const target = document.querySelector(button.dataset.scroll);
+          if (target) target.scrollIntoView({ behavior: "smooth", block: "start" });
+        });
+      });
+    }
+
+    function init() {
+      renderMenu();
+      renderCart();
+      renderOrders();
+      bindEvents();
+      setupRevealAnimations();
+      window.addEventListener("load", () => {
+        setTimeout(() => loadingScreen.classList.add("hidden"), 700);
+      });
+    }
+
+    init();
+  </script>
+</body>
+</html>
+
+
+
+
