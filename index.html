@@ -882,22 +882,6 @@
 
 /* ✅ ADD HERE (NOT BELOW placeOrder) */
 function startUPIPayment() {
-
-  function payWithApp(app) {
-  const amount = getCartTotal();
-
-  let url = "";
-
-  if (app === "gpay") {
-    url = `tez://upi/pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
-  }
-
-  if (app === "phonepe") {
-    url = `phonepe://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
-  }
-
-  window.location.href = url;
-}
   if (!cart.length) return;
 
   const formData = new FormData(checkoutForm);
@@ -914,21 +898,18 @@ function startUPIPayment() {
 
   const upiLink = `upi://pay?pa=${UPI_ID}&pn=${encodeURIComponent(UPI_NAME)}&am=${amount}&cu=INR`;
 
-  setTimeout(() => {
-  alert("After completing payment, click OK to confirm");
-  
-  const confirmPay = confirm("Did you complete the payment?");
-  
-  if (confirmPay) {
-    const order = buildOrder(formData, "paid");
-    finalizeOrder(order);
-  } else {
-    alert("Payment not confirmed");
-  }
-}, 2000);
-  // ✅ THIS LINE WAS MISSING
+  // OPEN UPI APP
+  window.location.href = upiLink;
 
-/* ⛔ THIS COMES AFTER */
+  // CONFIRM AFTER PAYMENT
+  setTimeout(() => {
+    const confirmPay = confirm("Did you complete the payment?");
+    if (confirmPay) {
+      const order = buildOrder(formData, "paid");
+      finalizeOrder(order);
+    }
+  }, 2000);
+}
 function placeOrder(event) {
   event.preventDefault();
   alert("Please pay first using Pay Now");
