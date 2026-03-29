@@ -2,8 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>IYERVAL FOODS | Pure Tradition, Modern Craft</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>IYERVAL FOODS | Pure Tradition</title>
   <style>
     :root {
       --bg: #0d0d0d;
@@ -37,7 +37,6 @@
     img { display: block; max-width: 100%; }
     button, input, textarea, select { font: inherit; }
 
-    /* Loader */
     .loading-screen {
       position: fixed; inset: 0; display: grid; place-items: center; z-index: 1200;
       background: linear-gradient(135deg, #0d0d0d, #181818);
@@ -52,7 +51,6 @@
     }
     .loading-mark span { letter-spacing: 0.35em; font-size: 0.78rem; color: var(--muted); text-transform: uppercase; }
 
-    /* Utility */
     .container { width: var(--container); margin: 0 auto; }
     .navbar {
       position: sticky; top: 0; z-index: 900;
@@ -60,22 +58,22 @@
       background: linear-gradient(180deg, rgba(13, 13, 13, 0.88), rgba(13, 13, 13, 0.55));
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .nav-inner { min-height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+    .nav-inner { min-height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; gap: 1rem; flex-wrap: wrap; padding: 0.5rem 0; }
     .brand { display: inline-flex; align-items: center; gap: 0.9rem; min-width: 0; }
     .brand img {
-      width: 58px; height: 58px; object-fit: cover; border-radius: 18px;
+      width: 48px; height: 48px; object-fit: cover; border-radius: 18px;
       box-shadow: 0 10px 24px rgba(255, 140, 0, 0.15);
     }
     .brand-copy strong {
-      display: block; font-size: 0.95rem; letter-spacing: 0.18em; text-transform: uppercase;
+      display: block; font-size: 0.9rem; letter-spacing: 0.18em; text-transform: uppercase;
     }
     .brand-copy span {
-      display: block; font-size: 0.76rem; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
+      display: block; font-size: 0.7rem; color: var(--muted); letter-spacing: 0.16em; text-transform: uppercase;
     }
 
-    .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; }
+    .nav-links { display: flex; align-items: center; gap: 1.5rem; list-style: none; flex-wrap: wrap; }
     .nav-links a {
-      font-size: 0.96rem; color: rgba(248, 245, 239, 0.84); position: relative;
+      font-size: 0.9rem; color: rgba(248, 245, 239, 0.84); position: relative;
     }
     .nav-links a::after {
       content: ""; position: absolute; left: 0; bottom: -0.5rem; width: 100%; height: 2px;
@@ -83,19 +81,19 @@
       transform: scaleX(0); transform-origin: left; transition: transform var(--ease);
     }
     .nav-links a:hover::after, .nav-links a:focus-visible::after { transform: scaleX(1); }
-    .nav-actions { display: flex; align-items: center; gap: 0.9rem; }
+    .nav-actions { display: flex; align-items: center; gap: 0.7rem; }
 
     .icon-btn, .ghost-btn, .solid-btn {
       border: 1px solid var(--border); border-radius: 999px; background: rgba(255, 255, 255, 0.04); color: var(--text); cursor: pointer;
     }
     .icon-btn {
-      width: 48px; height: 48px; display: inline-grid; place-items: center; position: relative;
+      width: 44px; height: 44px; display: inline-grid; place-items: center; position: relative;
     }
     .icon-btn:hover, .ghost-btn:hover, .solid-btn:hover, .menu-card button:hover, .filter-btn:hover,
     .checkout-btn:hover, .submit-btn:hover, .quantity-btn:hover, .remove-btn:hover, .panel-btn:hover {
       transform: translateY(-2px);
     }
-    .ghost-btn, .solid-btn, .checkout-btn, .submit-btn, .panel-btn { padding: 0.95rem 1.25rem; }
+    .ghost-btn, .solid-btn, .checkout-btn, .submit-btn, .panel-btn { padding: 0.7rem 1.1rem; font-size: 0.85rem; }
     .solid-btn, .checkout-btn, .submit-btn, .menu-card button {
       background: linear-gradient(135deg, var(--accent), var(--accent-soft));
       color: #1a1204; border: 0; font-weight: 700; box-shadow: 0 16px 34px rgba(255, 140, 0, 0.24);
@@ -104,12 +102,11 @@
       background: rgba(255, 255, 255, 0.06); border: 1px solid var(--border); color: var(--text);
     }
     .cart-count {
-      position: absolute; right: -4px; top: -4px; min-width: 22px; height: 22px; padding: 0 0.35rem;
+      position: absolute; right: -4px; top: -4px; min-width: 20px; height: 20px; padding: 0 0.3rem;
       display: grid; place-items: center; border-radius: 999px; background: var(--accent);
-      color: #1a1204; font-weight: 800; font-size: 0.75rem;
+      color: #1a1204; font-weight: 800; font-size: 0.7rem;
     }
 
-    /* Hero, About, etc. (same as before, but with minor text updates) */
     .hero {
       min-height: calc(100svh - var(--nav-h)); position: relative; display: grid; align-items: center; overflow: hidden;
     }
@@ -130,20 +127,20 @@
     }
     .hero-copy { max-width: 620px; animation: fadeUp 1s ease both; }
     .eyebrow {
-      display: inline-block; margin-bottom: 1rem; padding: 0.6rem 1rem; border-radius: 999px;
+      display: inline-block; margin-bottom: 1rem; padding: 0.5rem 0.9rem; border-radius: 999px;
       border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.05);
-      color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; font-size: 0.78rem;
+      color: var(--muted); letter-spacing: 0.18em; text-transform: uppercase; font-size: 0.7rem;
     }
     .hero h1 {
-      font-size: clamp(3rem, 7vw, 6rem); line-height: 0.95; letter-spacing: -0.05em; margin-bottom: 1.25rem; text-transform: uppercase;
+      font-size: clamp(2.5rem, 7vw, 5rem); line-height: 0.95; letter-spacing: -0.05em; margin-bottom: 1.25rem; text-transform: uppercase;
     }
     .hero h1 span { display: block; color: var(--accent-soft); }
     .hero p {
-      color: rgba(248, 245, 239, 0.84); max-width: 560px; font-size: 1.08rem; line-height: 1.75; margin-bottom: 1.8rem;
+      color: rgba(248, 245, 239, 0.84); max-width: 560px; font-size: 1rem; line-height: 1.6; margin-bottom: 1.8rem;
     }
     .hero-actions { display: flex; flex-wrap: wrap; gap: 1rem; }
     .hero-card {
-      justify-self: end; width: min(100%, 400px); border-radius: 30px; overflow: hidden;
+      justify-self: end; width: min(100%, 360px); border-radius: 30px; overflow: hidden;
       border: 1px solid rgba(255, 255, 255, 0.12); background: rgba(255, 255, 255, 0.06);
       backdrop-filter: blur(20px); box-shadow: var(--shadow); animation: fadeUp 1.2s ease 0.1s both;
     }
@@ -154,30 +151,30 @@
         url("https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/ITEM%20MENU.png") center/cover;
     }
     .hero-main-logo {
-      width: min(100%, 360px);
-      margin-bottom: 1.25rem;
+      width: min(100%, 280px);
+      margin-bottom: 1rem;
       border-radius: 28px;
       box-shadow: 0 26px 60px rgba(0, 0, 0, 0.3);
       border: 1px solid rgba(255, 255, 255, 0.08);
       background: rgba(255, 255, 255, 0.04);
     }
     .nav-mini-logo {
-      width: 42px;
-      height: 42px;
+      width: 38px;
+      height: 38px;
       object-fit: cover;
-      border-radius: 14px;
+      border-radius: 12px;
       border: 1px solid rgba(255, 255, 255, 0.12);
       box-shadow: 0 12px 24px rgba(255, 140, 0, 0.14);
     }
-    .hero-card-content { padding: 1.4rem; display: grid; gap: 0.7rem; }
-    .hero-card-content small { color: var(--muted); text-transform: uppercase; letter-spacing: 0.16em; }
-    .hero-card-content strong { font-size: 1.2rem; }
-    .hero-card-content p { margin: 0; font-size: 0.95rem; color: var(--muted); line-height: 1.6; }
+    .hero-card-content { padding: 1.2rem; display: grid; gap: 0.6rem; }
+    .hero-card-content small { color: var(--muted); text-transform: uppercase; letter-spacing: 0.16em; font-size: 0.7rem; }
+    .hero-card-content strong { font-size: 1.1rem; }
+    .hero-card-content p { margin: 0; font-size: 0.9rem; color: var(--muted); line-height: 1.5; }
 
-    section { padding: 6rem 0; position: relative; }
-    .section-head { display: grid; gap: 0.9rem; margin-bottom: 2rem; max-width: 760px; }
-    .section-head h2 { font-size: clamp(2rem, 4vw, 3.2rem); line-height: 1; letter-spacing: -0.04em; }
-    .section-head p { color: var(--muted); line-height: 1.8; max-width: 620px; }
+    section { padding: 5rem 0; position: relative; }
+    .section-head { display: grid; gap: 0.8rem; margin-bottom: 2rem; max-width: 760px; }
+    .section-head h2 { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1; letter-spacing: -0.04em; }
+    .section-head p { color: var(--muted); line-height: 1.7; max-width: 620px; font-size: 0.95rem; }
 
     .about-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(280px, 420px); gap: 2rem; align-items: stretch; }
     .about-copy, .about-media, .admin-panel, .contact-card, .confirmation-card, .cart-panel, .modal-card {
@@ -187,30 +184,30 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(18px);
     }
-    .about-copy { padding: 2rem; display: grid; gap: 1rem; }
-    .about-copy p { color: var(--muted); line-height: 1.85; }
+    .about-copy { padding: 1.8rem; display: grid; gap: 1rem; }
+    .about-copy p { color: var(--muted); line-height: 1.7; font-size: 0.95rem; }
     .about-points { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-top: 0.5rem; }
     .about-points article {
-      padding: 1rem; border-radius: 20px; background: rgba(255, 255, 255, 0.04);
+      padding: 0.9rem; border-radius: 20px; background: rgba(255, 255, 255, 0.04);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
-    .about-points strong { display: block; margin-bottom: 0.5rem; color: var(--accent-soft); }
-    .about-points span { color: var(--muted); font-size: 0.94rem; line-height: 1.6; }
+    .about-points strong { display: block; margin-bottom: 0.4rem; color: var(--accent-soft); font-size: 0.9rem; }
+    .about-points span { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
     .about-media {
-      overflow: hidden; min-height: 420px;
+      overflow: hidden; min-height: 380px;
       background:
         linear-gradient(180deg, transparent 0%, rgba(13, 13, 13, 0.72) 100%),
         url("https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg") center/cover;
       position: relative;
     }
     .about-media::after {
-      content: "Crafted in Palakkad, with love.";
-      position: absolute; left: 1.4rem; right: 1.4rem; bottom: 1.4rem; padding: 1rem 1.1rem;
+      content: "Crafted in Palakkad";
+      position: absolute; left: 1rem; right: 1rem; bottom: 1rem; padding: 0.8rem;
       border-radius: 18px; background: rgba(0, 0, 0, 0.45); border: 1px solid rgba(255, 255, 255, 0.12);
-      backdrop-filter: blur(8px); font-weight: 700; letter-spacing: 0.04em;
+      backdrop-filter: blur(8px); font-weight: 700; font-size: 0.9rem;
     }
 
-    .filter-row { display: flex; flex-wrap: wrap; gap: 0.85rem; margin-bottom: 2rem; }
+    .filter-row { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-bottom: 2rem; }
     .filter-btn.active {
       background: rgba(255, 140, 0, 0.18); color: var(--accent-soft);
       border-color: rgba(255, 140, 0, 0.35); box-shadow: 0 14px 30px rgba(255, 140, 0, 0.12);
@@ -221,80 +218,75 @@
       background: rgba(255, 255, 255, 0.04); transform: translateY(0); box-shadow: 0 18px 32px rgba(0, 0, 0, 0.16);
       transition: transform 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1), box-shadow 0.3s ease;
     }
-    .menu-card:hover { transform: translateY(-10px); box-shadow: 0 28px 54px rgba(0, 0, 0, 0.26); }
+    .menu-card:hover { transform: translateY(-8px); box-shadow: 0 28px 54px rgba(0, 0, 0, 0.26); }
     .menu-card-media { position: relative; overflow: hidden; aspect-ratio: 1 / 0.92; }
     .menu-card-media img { width: 100%; height: 100%; object-fit: cover; transition: transform 600ms ease; }
     .menu-card:hover .menu-card-media img { transform: scale(1.08); }
     .menu-tag {
-      position: absolute; left: 0.9rem; top: 0.9rem; padding: 0.45rem 0.8rem; border-radius: 999px;
+      position: absolute; left: 0.8rem; top: 0.8rem; padding: 0.3rem 0.7rem; border-radius: 999px;
       background: rgba(13, 13, 13, 0.72); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.12);
-      font-size: 0.72rem; letter-spacing: 0.14em; text-transform: uppercase;
+      font-size: 0.65rem; letter-spacing: 0.14em; text-transform: uppercase;
     }
-    .menu-card-body { padding: 1.2rem; display: grid; gap: 0.85rem; }
+    .menu-card-body { padding: 1rem; display: grid; gap: 0.7rem; }
     .menu-card-top { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
-    .menu-card h3 { font-size: 1.1rem; line-height: 1.25; }
-    .price { color: var(--accent-soft); font-weight: 800; white-space: nowrap; }
-    .menu-card p { color: var(--muted); font-size: 0.95rem; line-height: 1.7; }
-    .menu-card button { width: 100%; padding: 0.95rem 1rem; border-radius: 16px; cursor: pointer; }
+    .menu-card h3 { font-size: 1rem; line-height: 1.25; }
+    .price { color: var(--accent-soft); font-weight: 800; white-space: nowrap; font-size: 0.9rem; }
+    .menu-card p { color: var(--muted); font-size: 0.85rem; line-height: 1.5; }
+    .menu-card button { width: 100%; padding: 0.7rem; border-radius: 16px; cursor: pointer; font-size: 0.85rem; }
 
     .weight-select {
       background: rgba(255, 255, 255, 0.08);
       border: 1px solid var(--border);
       border-radius: 12px;
-      padding: 0.5rem;
+      padding: 0.4rem;
       color: var(--text);
-      font-size: 0.85rem;
-      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      margin-bottom: 0.4rem;
       width: 100%;
       cursor: pointer;
     }
-    .weight-select option { background: #1a1a1a; }
 
-    .contact-card, .admin-panel, .confirmation-card { padding: 2rem; }
-    .contact-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.25rem; }
-    .contact-card p, .contact-card a, .admin-panel p, .confirmation-card p { color: var(--muted); line-height: 1.8; }
+    .contact-card, .admin-panel, .confirmation-card { padding: 1.5rem; }
+    .contact-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1.2rem; }
+    .contact-card p, .contact-card a, .admin-panel p, .confirmation-card p { color: var(--muted); line-height: 1.6; font-size: 0.9rem; }
     .contact-card strong {
-      display: block; margin-bottom: 0.8rem; color: var(--accent-soft);
-      text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.8rem;
+      display: block; margin-bottom: 0.6rem; color: var(--accent-soft);
+      text-transform: uppercase; letter-spacing: 0.12em; font-size: 0.75rem;
     }
 
-    .admin-panel { margin-top: 1.5rem; display: none; gap: 1.2rem; }
+    .admin-panel { margin-top: 1.5rem; display: none; gap: 1rem; }
     .admin-panel.visible { display: grid; }
     .orders-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
     .order-card {
       border-radius: 22px; border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.04); padding: 1.2rem; display: grid; gap: 0.8rem;
-      position: relative;
-      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.04); padding: 1rem; display: grid; gap: 0.7rem;
     }
-    .order-meta { display: flex; justify-content: space-between; gap: 1rem; align-items: start; }
-    .order-meta strong { font-size: 1rem; }
-    .order-meta span, .order-items li, .cart-empty, .cart-note { color: var(--muted); }
-    .order-items { list-style: none; display: grid; gap: 0.55rem; padding-left: 0; }
+    .order-meta { display: flex; justify-content: space-between; gap: 1rem; align-items: start; font-size: 0.85rem; }
+    .order-meta strong { font-size: 0.9rem; }
+    .order-items { list-style: none; display: grid; gap: 0.4rem; padding-left: 0; }
     .order-items li {
       display: flex; justify-content: space-between; gap: 0.75rem;
-      border-bottom: 1px dashed rgba(255, 255, 255, 0.08); padding-bottom: 0.45rem; font-size: 0.94rem;
+      border-bottom: 1px dashed rgba(255, 255, 255, 0.08); padding-bottom: 0.4rem; font-size: 0.85rem;
     }
     .complete-btn {
       background: rgba(46, 204, 113, 0.2);
       border: 1px solid #2ecc71;
       color: #2ecc71;
-      padding: 0.4rem 0.8rem;
+      padding: 0.3rem 0.7rem;
       border-radius: 20px;
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       cursor: pointer;
       transition: all 0.2s;
     }
     .complete-btn:hover {
       background: #2ecc71;
       color: #1a1204;
-      transform: scale(1.02);
     }
 
     .feedback-form {
       display: grid;
-      gap: 1rem;
-      margin-top: 1.5rem;
+      gap: 0.8rem;
+      margin-top: 1rem;
     }
     .feedback-form input, .feedback-form textarea {
       width: 100%;
@@ -302,44 +294,35 @@
       border: 1px solid rgba(255, 255, 255, 0.12);
       background: rgba(255, 255, 255, 0.06);
       color: var(--text);
-      padding: 0.95rem 1rem;
+      padding: 0.8rem;
       resize: vertical;
     }
-    .feedback-form textarea { min-height: 100px; }
+    .feedback-form textarea { min-height: 80px; }
 
-    /* Whoosh animations */
+    /* Animations */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(38px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes heroZoom { to { transform: scale(1); } }
     @keyframes whooshIn {
       0% { opacity: 0; transform: scale(0.9) translateY(20px); }
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
-    @keyframes whooshOut {
-      0% { opacity: 1; transform: scale(1) translateY(0); }
-      100% { opacity: 0; transform: scale(0.9) translateY(-20px); }
-    }
-    .cart-item, .order-card, .menu-card {
-      animation: whooshIn 0.4s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
-    }
-    .modal-card {
-      animation: whooshIn 0.3s ease-out;
-    }
-    .cart-panel.open {
-      animation: slideInRight 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
-    }
-    @keyframes slideInRight {
-      from { transform: translateX(100%); }
-      to { transform: translateX(0); }
+    .cart-item, .order-card, .menu-card, .modal-card {
+      animation: whooshIn 0.3s cubic-bezier(0.34, 1.2, 0.64, 1) forwards;
     }
 
     .reveal { opacity: 0; transform: translateY(40px); transition: opacity 700ms ease, transform 700ms ease; }
     .reveal.visible { opacity: 1; transform: translateY(0); }
 
     .cart-fab {
-      position: fixed; top: 98px; right: 1rem; z-index: 930; display: inline-flex; align-items: center; gap: 0.85rem;
-      padding: 0.9rem 1.05rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.12);
+      position: fixed; top: 90px; right: 1rem; z-index: 930; display: inline-flex; align-items: center; gap: 0.7rem;
+      padding: 0.7rem 1rem; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.12);
       background: rgba(255, 255, 255, 0.08); backdrop-filter: blur(20px); color: var(--text);
-      box-shadow: var(--shadow); cursor: pointer;
+      box-shadow: var(--shadow); cursor: pointer; font-size: 0.85rem;
     }
-    .cart-fab strong { font-size: 0.95rem; }
 
     .cart-panel {
       position: fixed; top: 0; right: 0; width: min(460px, 100vw); height: 100vh; z-index: 1100;
@@ -347,21 +330,20 @@
       transition: transform 460ms cubic-bezier(0.2, 0.8, 0.2, 1); display: grid; grid-template-rows: auto 1fr auto;
     }
     .cart-panel.open { transform: translateX(0); }
-    .cart-header, .cart-footer { padding: 1.25rem 1.25rem 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+    .cart-header, .cart-footer { padding: 1rem 1.2rem 0.8rem; border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
     .cart-footer {
-      border-top: 1px solid rgba(255, 255, 255, 0.08); border-bottom: 0; display: grid; gap: 1rem;
-      background: rgba(13, 13, 13, 0.4);
+      border-top: 1px solid rgba(255, 255, 255, 0.08); border-bottom: 0; display: grid; gap: 0.8rem;
     }
     .cart-head-row, .cart-total { display: flex; justify-content: space-between; align-items: center; gap: 1rem; }
-    .cart-body { padding: 1rem 1.25rem 1.25rem; overflow-y: auto; display: grid; gap: 1rem; align-content: start; }
+    .cart-body { padding: 1rem 1.2rem; overflow-y: auto; display: grid; gap: 0.8rem; align-content: start; }
     .cart-item {
-      display: grid; gap: 0.85rem; padding: 1rem; border-radius: 22px;
+      display: grid; gap: 0.7rem; padding: 0.8rem; border-radius: 22px;
       background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.08);
     }
     .cart-item-head, .quantity-row { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
-    .quantity-controls { display: inline-flex; align-items: center; gap: 0.55rem; }
-    .quantity-btn, .remove-btn, .close-btn { cursor: pointer; border-radius: 14px; padding: 0.55rem 0.8rem; }
-    .quantity-btn { min-width: 38px; min-height: 38px; display: grid; place-items: center; }
+    .quantity-controls { display: inline-flex; align-items: center; gap: 0.4rem; }
+    .quantity-btn, .remove-btn, .close-btn { cursor: pointer; border-radius: 12px; padding: 0.4rem 0.6rem; font-size: 0.8rem; }
+    .quantity-btn { min-width: 32px; min-height: 32px; display: grid; place-items: center; }
     .cart-item-price, .highlight { color: var(--accent-soft); font-weight: 800; }
 
     .backdrop, .modal {
@@ -371,40 +353,45 @@
     .backdrop { background: rgba(0, 0, 0, 0.55); backdrop-filter: blur(8px); }
     .modal { display: grid; place-items: center; padding: 1rem; z-index: 1150; }
     .modal-card {
-      width: min(560px, 100%); max-height: calc(100vh - 2rem); overflow-y: auto; padding: 1.6rem;
-      display: grid; gap: 1rem; transform: translateY(24px) scale(0.98); transition: transform var(--ease);
+      width: min(520px, 100%); max-height: calc(100vh - 2rem); overflow-y: auto; padding: 1.4rem;
+      display: grid; gap: 0.8rem; transform: translateY(24px) scale(0.98); transition: transform var(--ease);
     }
     .modal.visible .modal-card { transform: translateY(0) scale(1); }
     .modal-top { display: flex; justify-content: space-between; gap: 1rem; align-items: center; }
-    .checkout-form { display: grid; gap: 0.95rem; }
-    .checkout-form label { display: grid; gap: 0.45rem; font-size: 0.94rem; color: var(--muted); }
-    .checkout-form input, .checkout-form textarea, .checkout-form select {
-      width: 100%; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.06); color: var(--text); padding: 0.95rem 1rem; resize: vertical;
+    .checkout-form { display: grid; gap: 0.8rem; }
+    .checkout-form label { display: grid; gap: 0.4rem; font-size: 0.85rem; color: var(--muted); }
+    .checkout-form input, .checkout-form textarea {
+      width: 100%; border-radius: 14px; border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.06); color: var(--text); padding: 0.8rem; resize: vertical;
     }
-    .checkout-form textarea { min-height: 100px; }
     .checkout-summary, .confirmation-summary {
-      border-radius: 20px; padding: 1rem; background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.08); display: grid; gap: 0.75rem;
+      border-radius: 20px; padding: 0.8rem; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08); display: grid; gap: 0.6rem;
     }
-    .summary-list { list-style: none; display: grid; gap: 0.55rem; }
-    .summary-list li { display: flex; justify-content: space-between; gap: 0.75rem; color: var(--muted); font-size: 0.94rem; }
+    .summary-list { list-style: none; display: grid; gap: 0.4rem; }
+    .summary-list li { display: flex; justify-content: space-between; gap: 0.75rem; color: var(--muted); font-size: 0.85rem; }
     .summary-foot {
       display: flex; justify-content: space-between; gap: 1rem; padding-top: 0.4rem;
       border-top: 1px dashed rgba(255, 255, 255, 0.12); font-weight: 700;
     }
-    .footer { padding: 1.5rem 0 2rem; color: var(--muted); font-size: 0.92rem; }
+    .footer { padding: 1.5rem 0 2rem; color: var(--muted); font-size: 0.8rem; }
     .footer-inner {
       display: flex; justify-content: space-between; gap: 1rem; border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 1.5rem; flex-wrap: wrap;
+      padding-top: 1.2rem; flex-wrap: wrap;
     }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(38px); }
-      to { opacity: 1; transform: translateY(0); }
+    .test-mode-btn {
+      background: rgba(255,255,255,0.05);
+      border: 1px dashed rgba(255,140,0,0.4);
+      border-radius: 20px;
+      padding: 0.3rem 0.8rem;
+      font-size: 0.7rem;
+      cursor: pointer;
+      color: var(--muted);
     }
-    @keyframes heroZoom { to { transform: scale(1); } }
+    .test-mode-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent-soft);
+    }
 
     @media (max-width: 980px) {
       .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; }
@@ -412,14 +399,17 @@
       .hero-card { justify-self: start; }
     }
     @media (max-width: 720px) {
-      :root { --container: min(100vw - 1.2rem, 1180px); }
+      :root { --container: min(100vw - 1rem, 1180px); }
       .brand-copy span, .ghost-btn span { display: none; }
-      .nav-actions .ghost-btn { padding-inline: 0.95rem; }
-      .menu-grid, .about-points { grid-template-columns: 1fr; }
-      section { padding: 4.5rem 0; }
-      .hero-grid { padding: 4rem 0 3rem; }
+      .nav-actions .ghost-btn { padding-inline: 0.8rem; }
+      .menu-grid { grid-template-columns: 1fr; }
+      section { padding: 3rem 0; }
+      .hero-grid { padding: 3rem 0 2rem; }
       .hero-actions, .filter-row, .footer-inner { flex-direction: column; align-items: stretch; }
-      .cart-fab { right: 0.75rem; left: 0.75rem; justify-content: space-between; }
+      .cart-fab { right: 0.5rem; left: 0.5rem; justify-content: space-between; top: 80px; }
+      .nav-inner { flex-direction: column; align-items: center; gap: 0.5rem; }
+      .brand { justify-content: center; }
+      .nav-links { justify-content: center; gap: 1rem; }
     }
   </style>
 </head>
@@ -430,10 +420,10 @@
 
   <header class="navbar">
     <div class="container nav-inner">
-      <a class="brand" href="#home"><img src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="logo"><div class="brand-copy"><strong>IYERVAL FOODS</strong><span>Authentic Taste. Pure Tradition.</span></div></a>
+      <a class="brand" href="#home"><img src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="logo"><div class="brand-copy"><strong>IYERVAL FOODS</strong><span>Authentic Taste</span></div></a>
       <nav><ul class="nav-links" id="navLinks"><li><a href="#home">Home</a></li><li><a href="#menu">Menu</a></li><li><a href="#about">Our Story</a></li><li><a href="#contact">Contact</a></li></ul></nav>
       <div class="nav-actions">
-        <button class="ghost-btn" id="adminToggleBtn">Admin Orders</button>
+        <button class="ghost-btn" id="adminToggleBtn">Orders</button>
         <img class="nav-mini-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/2.png" alt="mini logo">
         <button class="icon-btn" id="navCartBtn"><span>Cart</span><span class="cart-count" id="navCartCount">0</span></button>
       </div>
@@ -445,42 +435,45 @@
   <main>
     <section class="hero" id="home">
       <div class="container hero-grid">
-        <div class="hero-copy"><img class="hero-main-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="logo"><span class="eyebrow">Premium South Indian Pantry & Kitchen</span><h1>Tradition, plated <span>for today.</span></h1><p>Browse our curated collection of authentic, preservative‑free products made in Palakkad. Order with confidence – only after payment your order is confirmed.</p><div class="hero-actions"><button class="solid-btn" data-scroll="#menu">Order Now</button><button class="ghost-btn" data-scroll="#about">Discover Our Story</button></div></div>
-        <aside class="hero-card"><div class="hero-card-media"></div><div class="hero-card-content"><small>Chef's Board</small><strong>Curd Chilli, Vadam, Pickles & More</strong><p>Weight‑based pricing, UPI deep links, and a manual “I Have Paid” button ensure you only pay once.</p></div></aside>
+        <div class="hero-copy"><img class="hero-main-logo" src="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" alt="logo"><span class="eyebrow">Premium South Indian Pantry</span><h1>Tradition, plated <span>for today.</span></h1><p>Authentic, preservative‑free products made in Palakkad. Order with confidence – only after payment your order is confirmed.</p><div class="hero-actions"><button class="solid-btn" data-scroll="#menu">Order Now</button><button class="ghost-btn" data-scroll="#about">Discover Our Story</button></div></div>
+        <aside class="hero-card"><div class="hero-card-media"></div><div class="hero-card-content"><small>Chef's Board</small><strong>Curd Chilli, Vadam, Pickles</strong><p>Weight‑based pricing, UPI deep links, and manual payment confirmation.</p></div></aside>
       </div>
     </section>
 
-    <section class="reveal" id="about"><div class="container"><div class="section-head"><span class="eyebrow">Our Story</span><h2>Rooted in heritage, served with polish.</h2><p>IYERVAL FOODS is born in the heart of Palakkad, Kerala. We bring you traditional recipes crafted with zero preservatives and uncompromised health.</p></div><div class="about-grid"><div class="about-copy"><p>Every product is made using age‑old family methods – sun‑dried vadam, hand‑pounded spices, and pickles fermented naturally. No artificial colours, no chemical preservatives, just pure, wholesome taste. Our small‑batch production ensures freshness in every bite.</p><div class="about-points"><article><strong>Made in Palakkad</strong><span>Our kitchen is nestled in the lush countryside of Palakkad, where traditional recipes have been preserved for generations.</span></article><article><strong>Zero Preservatives</strong><span>We use only natural ingredients: sea salt, cold‑pressed oils, and traditional sun‑drying techniques. No chemicals, ever.</span></article><article><strong>Health First</strong><span>All our products are free from added MSG, artificial flavours, and preservatives. Pure, clean eating.</span></article><article><strong>Small Batch</strong><span>We produce in small batches to guarantee quality and freshness. Each jar is crafted with care.</span></article></div></div><div class="about-media" aria-hidden="true"></div></div></div></section>
+    <section class="reveal" id="about"><div class="container"><div class="section-head"><span class="eyebrow">Our Story</span><h2>Rooted in heritage, served with polish.</h2><p>IYERVAL FOODS is born in Palakkad, Kerala. We bring you traditional recipes crafted with zero preservatives and uncompromised health.</p></div><div class="about-grid"><div class="about-copy"><p>Every product is made using age‑old family methods – sun‑dried vadam, hand‑pounded spices, and pickles fermented naturally. No artificial colours, no chemical preservatives, just pure, wholesome taste. Our small‑batch production ensures freshness in every bite.</p><div class="about-points"><article><strong>Made in Palakkad</strong><span>Nestled in the lush countryside of Palakkad, where traditional recipes have been preserved for generations.</span></article><article><strong>Zero Preservatives</strong><span>We use only natural ingredients: sea salt, cold‑pressed oils, and traditional sun‑drying techniques.</span></article><article><strong>Health First</strong><span>Free from added MSG, artificial flavours, and preservatives. Pure, clean eating.</span></article><article><strong>Small Batch</strong><span>We produce in small batches to guarantee quality and freshness.</span></article></div></div><div class="about-media" aria-hidden="true"></div></div></div></section>
 
-    <section class="reveal" id="menu"><div class="container"><div class="section-head"><span class="eyebrow">Menu</span><h2>Curated for every craving.</h2><p>Choose weight, see updated price, and add to cart. A test product (₹1) is available for payment testing.</p></div><div class="filter-row" id="filterRow"><button class="filter-btn active" data-filter="All">All</button><button class="filter-btn" data-filter="Meals">Meals</button><button class="filter-btn" data-filter="Snacks">Snacks</button><button class="filter-btn" data-filter="Drinks">Drinks</button></div><div class="menu-grid" id="menuGrid"></div></div></section>
+    <section class="reveal" id="menu"><div class="container"><div class="section-head"><span class="eyebrow">Menu</span><h2>Curated for every craving.</h2><p>Choose weight, see updated price, and add to cart.</p></div><div class="filter-row" id="filterRow"><button class="filter-btn active" data-filter="All">All</button><button class="filter-btn" data-filter="Meals">Meals</button><button class="filter-btn" data-filter="Snacks">Snacks</button><button class="filter-btn" data-filter="Drinks">Drinks</button></div><div class="menu-grid" id="menuGrid"></div><div style="text-align: center; margin-top: 1rem;"><button id="unlockTestBtn" class="test-mode-btn">🔒 Test Mode</button></div></div></section>
 
-    <section class="reveal" id="contact"><div class="container"><div class="section-head"><span class="eyebrow">Contact & Feedback</span><h2>We'd love to hear from you.</h2><p>Have a question, suggestion, or just want to share your experience? Reach out below.</p></div><div class="contact-grid"><div class="contact-card"><strong>Order Support</strong><p>For any order related queries, email us at <a href="mailto:orders@iyervalfoods.com">orders@iyervalfoods.com</a> or call +91 98765 43210.</p></div><div class="contact-card"><strong>Wholesale Inquiries</strong><p>Interested in stocking our products? Reach our sales team at <a href="mailto:wholesale@iyervalfoods.com">wholesale@iyervalfoods.com</a>.</p></div><div class="contact-card"><strong>Visit Us</strong><p>IYERVAL FOODS<br>Kalpathy, Palakkad, Kerala – 678001<br>Open Mon–Sat, 9am–6pm</p></div></div>
-      <div class="contact-card" style="margin-top: 2rem;">
-        <strong>Send us your feedback</strong>
+    <section class="reveal" id="contact"><div class="container"><div class="section-head"><span class="eyebrow">Contact & Feedback</span><h2>We'd love to hear from you.</h2><p>Have a question or suggestion? Reach out below.</p></div><div class="contact-grid"><div class="contact-card"><strong>Order Support</strong><p><a href="mailto:orders@iyervalfoods.com">orders@iyervalfoods.com</a><br>+91 98765 43210</p></div><div class="contact-card"><strong>Wholesale</strong><p><a href="mailto:wholesale@iyervalfoods.com">wholesale@iyervalfoods.com</a></p></div><div class="contact-card"><strong>Visit Us</strong><p>Kalpathy, Palakkad, Kerala – 678001<br>Mon–Sat, 9am–6pm</p></div></div>
+      <div class="contact-card" style="margin-top: 1.5rem;">
+        <strong>Send feedback</strong>
         <form id="feedbackForm" class="feedback-form">
           <input type="email" placeholder="Your email address" required>
-          <textarea placeholder="Your feedback or suggestion..." rows="3" required></textarea>
-          <button type="submit" class="solid-btn" style="padding: 0.75rem;">Submit Feedback</button>
+          <textarea placeholder="Your feedback..." rows="2" required></textarea>
+          <button type="submit" class="solid-btn" style="padding: 0.6rem;">Submit</button>
         </form>
-        <p id="feedbackMsg" style="color: #2ecc71; margin-top: 0.5rem; display: none;">Thank you! We'll get back to you soon.</p>
+        <p id="feedbackMsg" style="color: #2ecc71; margin-top: 0.5rem; display: none;">Thank you!</p>
       </div>
 
-      <div class="admin-panel" id="adminPanel"><div class="cart-head-row"><div><span class="eyebrow">Admin View</span><h3 style="margin-top:0.4rem">Order Management</h3></div><div><button class="panel-btn" id="refreshOrdersBtn">Refresh</button><button class="panel-btn" id="exportCSVBtn">Export CSV</button><button class="panel-btn" id="shareWhatsAppBtn">Share via WhatsApp</button></div></div><div class="orders-grid" id="ordersGrid"></div></div></div></section>
+      <div class="admin-panel" id="adminPanel"><div class="cart-head-row"><div><span class="eyebrow">Order Management</span><h3 style="margin-top:0.2rem">Orders</h3></div><div><button class="panel-btn" id="refreshOrdersBtn">Refresh</button><button class="panel-btn" id="exportCSVBtn">Export CSV</button><button class="panel-btn" id="shareWhatsAppBtn">WhatsApp</button></div></div><div class="orders-grid" id="ordersGrid"></div></div></div></section>
   </main>
 
-  <footer class="footer"><div class="container footer-inner"><span>© 2025 IYERVAL FOODS – Preservative‑free tradition from Palakkad</span><span>Crafted with love, for your table</span></div></footer>
+  <footer class="footer"><div class="container footer-inner"><span>© 2025 IYERVAL FOODS – Preservative‑free tradition from Palakkad</span><span>Crafted with love</span></div></footer>
 
   <div class="backdrop" id="backdrop"></div>
 
-  <aside class="cart-panel" id="cartPanel"><div class="cart-header"><div class="cart-head-row"><div><span class="eyebrow">Your Cart</span><h3>Freshly selected favourites</h3></div><button class="close-btn" id="closeCartBtn">Close</button></div></div><div class="cart-body" id="cartItemsContainer"><p class="cart-empty">Your cart is empty.</p></div><div class="cart-footer"><div class="cart-total"><span>Total</span><strong class="highlight" id="cartTotal">Rs.0.00</strong></div><button class="checkout-btn" id="checkoutBtn">Checkout</button></div></aside>
+  <aside class="cart-panel" id="cartPanel"><div class="cart-header"><div class="cart-head-row"><div><span class="eyebrow">Your Cart</span><h3>Selected items</h3></div><button class="close-btn" id="closeCartBtn">Close</button></div></div><div class="cart-body" id="cartItemsContainer"><p class="cart-empty">Your cart is empty.</p></div><div class="cart-footer"><div class="cart-total"><span>Total</span><strong class="highlight" id="cartTotal">Rs.0.00</strong></div><button class="checkout-btn" id="checkoutBtn">Checkout</button></div></aside>
 
-  <div class="modal" id="checkoutModal"><div class="modal-card"><div class="modal-top"><div><span class="eyebrow">Checkout</span><h3>Delivery details</h3></div><button class="close-btn" id="closeCheckoutBtn">Close</button></div><div class="checkout-summary"><h4>Order summary</h4><ul class="summary-list" id="checkoutSummaryList"></ul><div class="summary-foot"><span>Total</span><span id="checkoutSummaryTotal">Rs.0.00</span></div></div><form class="checkout-form" id="checkoutForm"><label>Name *<input type="text" name="name" placeholder="Full name" required></label><label>Phone *<input type="tel" name="phone" placeholder="Phone number" required></label><label>Address *<textarea name="address" placeholder="Full delivery address" required></textarea></label><label>Notes<textarea name="notes" placeholder="Any special instructions"></textarea></label><button class="submit-btn" id="payNowBtn" type="button">Pay via UPI</button><button type="button" onclick="payWithApp('gpay')" class="ghost-btn">Open GPay</button><button type="button" onclick="payWithApp('phonepe')" class="ghost-btn">Open PhonePe</button><button type="button" id="confirmPaymentBtn" class="solid-btn" style="background: #2c7a2c;">✅ I Have Paid – Place Order</button></form></div></div>
+  <div class="modal" id="checkoutModal"><div class="modal-card"><div class="modal-top"><div><span class="eyebrow">Checkout</span><h3>Delivery details</h3></div><button class="close-btn" id="closeCheckoutBtn">Close</button></div><div class="checkout-summary"><h4>Order summary</h4><ul class="summary-list" id="checkoutSummaryList"></ul><div class="summary-foot"><span>Total</span><span id="checkoutSummaryTotal">Rs.0.00</span></div></div><form class="checkout-form" id="checkoutForm"><label>Name *<input type="text" name="name" placeholder="Full name" required></label><label>Phone *<input type="tel" name="phone" placeholder="Phone number" required></label><label>Address *<textarea name="address" placeholder="Full delivery address" required></textarea></label><label>Notes<textarea name="notes" placeholder="Any special instructions"></textarea></label><button class="submit-btn" id="payNowBtn" type="button">Pay via UPI</button><button type="button" onclick="payWithApp('gpay')" class="ghost-btn">GPay</button><button type="button" onclick="payWithApp('phonepe')" class="ghost-btn">PhonePe</button><button type="button" id="confirmPaymentBtn" class="solid-btn" style="background: #2c7a2c;">✅ I Have Paid – Place Order</button></form></div></div>
 
-  <div class="modal" id="confirmationModal"><div class="modal-card confirmation-card"><div class="modal-top"><div><span class="eyebrow">Order Confirmed</span><h3>Order Placed Successfully</h3></div><button class="close-btn" id="closeConfirmationBtn">Close</button></div><p>Your order has been saved. It is now visible in the admin panel.</p><div class="confirmation-summary" id="confirmationSummary"></div><button class="submit-btn" id="continueBrowsingBtn">Continue Browsing</button></div></div>
+  <div class="modal" id="confirmationModal"><div class="modal-card confirmation-card"><div class="modal-top"><div><span class="eyebrow">Order Confirmed</span><h3>Order Placed Successfully</h3></div><button class="close-btn" id="closeConfirmationBtn">Close</button></div><p>Your order has been saved.</p><div class="confirmation-summary" id="confirmationSummary"></div><button class="submit-btn" id="continueBrowsingBtn">Continue Browsing</button></div></div>
 
   <script>
-    const STORAGE_KEYS = { cart: "iyerval-cart", orders: "orders", feedback: "iyerval-feedback" };
-    const UPI_ID = "vanajasreeram.1976@okhdfcbank";
+    // Obfuscated UPI ID – basic encoding to deter casual snooping
+    const _p1 = "vanajasreeram";
+    const _p2 = "1976";
+    const _p3 = "okhdfcbank";
+    const UPI_ID = `${_p1}.${_p2}@${_p3}`;
     const UPI_NAME = "SUDHARSAN P S";
     const ADMIN_PASS = "1976";
 
@@ -491,22 +484,23 @@
       { label: "1kg", multiplier: 10 }
     ];
 
-    const menuItems = [
+    const baseMenu = [
       { id: 1, name: "Curd Chilli", category: "Snacks", basePrice: 22, description: "Tangy and spicy curd chillies", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/1.jpg" },
       { id: 2, name: "Karuvadam Basket", category: "Snacks", basePrice: 24, description: "Crispy traditional rice vadam", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/2.jpg" },
       { id: 3, name: "Avakaya Mango Pickle", category: "Meals", basePrice: 26, description: "Authentic Andhra style pickle", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/5.jpg" },
-      { id: 4, name: "Vadam Selection", category: "Snacks", basePrice: 21, description: "Assorted vadam mix", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/4.jpg" },
-      { id: 5, name: "Test Product (₹1)", category: "Drinks", basePrice: 0.1, description: "For testing payment flow – only ₹1", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" }
+      { id: 4, name: "Vadam Selection", category: "Snacks", basePrice: 21, description: "Assorted vadam mix", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/images/4.jpg" }
     ];
+    const testItem = { id: 5, name: "Test Product (₹1)", category: "Drinks", basePrice: 0.1, description: "For testing payment flow – only ₹1", image: "https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" };
+    let testProductUnlocked = false;
+    let menuItems = [...baseMenu];
 
     let selectedFilter = "All";
-    let cart = loadState(STORAGE_KEYS.cart, []);
-    let orders = loadState(STORAGE_KEYS.orders, []);
+    let cart = loadState("iyerval-cart", []);
+    let orders = loadState("iyerval-orders", []);
     let pendingOrderData = null;
 
     const dom = {
       menuGrid: document.getElementById("menuGrid"),
-      navLinks: document.getElementById("navLinks"),
       adminToggleBtn: document.getElementById("adminToggleBtn"),
       adminPanel: document.getElementById("adminPanel"),
       ordersGrid: document.getElementById("ordersGrid"),
@@ -536,7 +530,8 @@
       confirmationSummary: document.getElementById("confirmationSummary"),
       loadingScreen: document.getElementById("loadingScreen"),
       feedbackForm: document.getElementById("feedbackForm"),
-      feedbackMsg: document.getElementById("feedbackMsg")
+      feedbackMsg: document.getElementById("feedbackMsg"),
+      unlockTestBtn: document.getElementById("unlockTestBtn")
     };
 
     function loadState(key, fallback) { try { const raw = localStorage.getItem(key); return raw ? JSON.parse(raw) : fallback; } catch(e) { return fallback; } }
@@ -547,6 +542,8 @@
     function getCartTotal() { return cart.reduce((sum, item) => sum + (item.price * item.quantity), 0); }
 
     function renderMenu() {
+      const itemsToShow = testProductUnlocked ? [...baseMenu, testItem] : baseMenu;
+      menuItems = itemsToShow;
       const filtered = selectedFilter === "All" ? menuItems : menuItems.filter(i => i.category === selectedFilter);
       dom.menuGrid.innerHTML = filtered.map(item => {
         const currentPrice = (item.basePrice * 10).toFixed(2);
@@ -573,7 +570,7 @@
       const existing = cart.find(i => i.id === item.id && i.weightMultiplier === weightMultiplier);
       if (existing) existing.quantity += 1;
       else cart.push({ ...item, price: finalPrice, weightMultiplier, quantity: 1 });
-      saveState(STORAGE_KEYS.cart, cart);
+      saveState("iyerval-cart", cart);
       renderCart();
       openCart();
     }
@@ -596,7 +593,7 @@
       const newQty = cart[idx].quantity + Number(change);
       if (newQty <= 0) cart.splice(idx, 1);
       else cart[idx].quantity = newQty;
-      saveState(STORAGE_KEYS.cart, cart);
+      saveState("iyerval-cart", cart);
       renderCart();
       if (dom.checkoutModal.classList.contains("visible")) renderCheckoutSummary();
     }
@@ -604,7 +601,7 @@
     function removeCartItem(compositeId) {
       const [id, weightMult] = compositeId.split("_");
       cart = cart.filter(i => !(i.id === Number(id) && i.weightMultiplier === parseFloat(weightMult)));
-      saveState(STORAGE_KEYS.cart, cart);
+      saveState("iyerval-cart", cart);
       renderCart();
       if (dom.checkoutModal.classList.contains("visible")) renderCheckoutSummary();
     }
@@ -615,14 +612,13 @@
     }
 
     function renderOrders() {
-      if (!orders.length) { dom.ordersGrid.innerHTML = `<article class="order-card"><strong>No orders yet</strong><p>Placed orders will appear here.</p></article>`; return; }
-      dom.ordersGrid.innerHTML = [...orders].reverse().map((order, idx) => `<article class="order-card" data-order-index="${idx}"><div class="order-meta"><div><strong>${order.name}</strong><span>${order.phone}</span></div><span>#${order.orderId}</span></div><p>${order.address}</p><ul class="order-items">${order.items.map(it => `<li><span>${it.name} (${it.weightLabel}) x ${it.quantity}</span><span>${formatCurrency(it.price * it.quantity)}</span></li>`).join("")}</ul>${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}<div class="order-meta"><span>${formatDate(order.timestamp)}</span><strong class="highlight">${formatCurrency(order.total)}</strong></div><button class="complete-btn" data-order-id="${order.orderId}">✓ Completed</button></article>`).join("");
-      // Attach complete button events
+      if (!orders.length) { dom.ordersGrid.innerHTML = `<article class="order-card"><strong>No orders yet</strong></article>`; return; }
+      dom.ordersGrid.innerHTML = [...orders].reverse().map(order => `<article class="order-card"><div class="order-meta"><div><strong>${order.name}</strong><span>${order.phone}</span></div><span>#${order.orderId}</span></div><p>${order.address}</p><ul class="order-items">${order.items.map(it => `<li><span>${it.name} (${it.weightLabel}) x ${it.quantity}</span><span>${formatCurrency(it.price * it.quantity)}</span></li>`).join("")}</ul>${order.notes ? `<p><strong>Notes:</strong> ${order.notes}</p>` : ""}<div class="order-meta"><span>${formatDate(order.timestamp)}</span><strong class="highlight">${formatCurrency(order.total)}</strong></div><button class="complete-btn" data-order-id="${order.orderId}">✓ Completed</button></article>`).join("");
       document.querySelectorAll(".complete-btn").forEach(btn => {
         btn.addEventListener("click", (e) => {
           const orderId = btn.dataset.orderId;
           orders = orders.filter(o => o.orderId !== orderId);
-          saveState(STORAGE_KEYS.orders, orders);
+          saveState("iyerval-orders", orders);
           renderOrders();
         });
       });
@@ -646,9 +642,9 @@
 
     function finalizeOrder(order) {
       orders.push(order);
-      saveState(STORAGE_KEYS.orders, orders);
+      saveState("iyerval-orders", orders);
       cart = [];
-      saveState(STORAGE_KEYS.cart, cart);
+      saveState("iyerval-cart", cart);
       dom.checkoutForm.reset();
       renderCart();
       renderOrders();
@@ -686,8 +682,8 @@
     function closeConfirmation() { dom.confirmationModal.classList.remove("visible"); if (!dom.cartPanel.classList.contains("open") && !dom.checkoutModal.classList.contains("visible")) { dom.backdrop.classList.remove("visible"); document.body.classList.remove("modal-open"); } }
 
     function toggleAdminPanel() { const pwd = prompt("Enter Admin Password:"); if (pwd !== ADMIN_PASS) { alert("Wrong password"); return; } dom.adminPanel.classList.toggle("visible"); renderOrders(); }
-    function exportOrdersCSV() { if (!orders.length) return alert("No orders to export"); const headers = ["Order ID","Name","Phone","Address","Notes","Items","Total","Timestamp"]; const rows = orders.map(o => [o.orderId, o.name, o.phone, o.address, o.notes, o.items.map(i=>`${i.name}(${i.weightLabel}) x${i.quantity}`).join("; "), o.total, new Date(o.timestamp).toLocaleString()]); const csv = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n"); const blob = new Blob([csv], {type: "text/csv"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `iyerval_orders_${Date.now()}.csv`; a.click(); URL.revokeObjectURL(a.href); }
-    function shareWhatsApp() { if (!orders.length) return alert("No orders to share"); const lastOrder = orders[orders.length-1]; const itemsText = lastOrder.items.map(i=>`${i.name} (${i.weightLabel}) x${i.quantity}`).join(", "); const msg = `New Order from IYERVAL FOODS\n\nOrder ID: ${lastOrder.orderId}\nName: ${lastOrder.name}\nPhone: ${lastOrder.phone}\nAddress: ${lastOrder.address}\nItems: ${itemsText}\nTotal: ${formatCurrency(lastOrder.total)}\nNotes: ${lastOrder.notes || "None"}`; window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank"); }
+    function exportOrdersCSV() { if (!orders.length) return alert("No orders"); const headers = ["Order ID","Name","Phone","Address","Notes","Items","Total","Timestamp"]; const rows = orders.map(o => [o.orderId, o.name, o.phone, o.address, o.notes, o.items.map(i=>`${i.name}(${i.weightLabel}) x${i.quantity}`).join("; "), o.total, new Date(o.timestamp).toLocaleString()]); const csv = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(",")).join("\n"); const blob = new Blob([csv], {type: "text/csv"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = `iyerval_orders_${Date.now()}.csv`; a.click(); URL.revokeObjectURL(a.href); }
+    function shareWhatsApp() { if (!orders.length) return alert("No orders"); const lastOrder = orders[orders.length-1]; const itemsText = lastOrder.items.map(i=>`${i.name} (${i.weightLabel}) x${i.quantity}`).join(", "); const msg = `IYERVAL FOODS Order\nID: ${lastOrder.orderId}\nName: ${lastOrder.name}\nPhone: ${lastOrder.phone}\nAddress: ${lastOrder.address}\nItems: ${itemsText}\nTotal: ${formatCurrency(lastOrder.total)}\nNotes: ${lastOrder.notes || "None"}`; window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, "_blank"); }
 
     window.payWithApp = (app) => {
       if (!cart.length) return alert("Cart is empty");
@@ -705,12 +701,23 @@
       const email = dom.feedbackForm.querySelector("input").value;
       const feedback = dom.feedbackForm.querySelector("textarea").value;
       if (!email || !feedback) return;
-      const feedbacks = loadState(STORAGE_KEYS.feedback, []);
+      const feedbacks = loadState("iyerval-feedback", []);
       feedbacks.push({ email, feedback, timestamp: Date.now() });
-      saveState(STORAGE_KEYS.feedback, feedbacks);
+      saveState("iyerval-feedback", feedbacks);
       dom.feedbackMsg.style.display = "block";
       dom.feedbackForm.reset();
       setTimeout(() => dom.feedbackMsg.style.display = "none", 3000);
+    }
+
+    function unlockTestProduct() {
+      const code = prompt("Enter test product code:");
+      if (code === ADMIN_PASS) {
+        testProductUnlocked = true;
+        renderMenu();
+        alert("Test product unlocked! Refresh the menu.");
+      } else {
+        alert("Invalid code.");
+      }
     }
 
     function bindEvents() {
@@ -732,6 +739,7 @@
       dom.backdrop.addEventListener("click", () => { closeCart(); closeCheckout(); closeConfirmation(); });
       document.querySelectorAll("[data-scroll]").forEach(btn => btn.addEventListener("click", () => { const target = document.querySelector(btn.dataset.scroll); if(target) target.scrollIntoView({ behavior: "smooth" }); }));
       dom.feedbackForm.addEventListener("submit", handleFeedback);
+      dom.unlockTestBtn.addEventListener("click", unlockTestProduct);
     }
 
     function init() {
