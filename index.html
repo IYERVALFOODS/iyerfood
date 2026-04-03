@@ -82,24 +82,66 @@ function closeConfirmation(){el.confirmationModal.classList.remove("visible");el
 function buildOrder(formData,paymentMethod="Razorpay"){const timestamp=Date.now();return{orderId:getOrderReference(timestamp),name:String(formData.get("name")||"").trim(),phone:String(formData.get("phone")||"").trim(),pincode:String(formData.get("pincode")||"").trim(),address:String(formData.get("address")||"").trim(),notes:String(formData.get("notes")||"").trim(),items:state.cart.map(item=>({id:item.id,key:item.key,name:item.name,price:item.price,quantity:item.quantity,weightMultiplier:item.weightMultiplier,weightLabel:item.weightLabel})),subtotal:getSubtotal(),shipping:getShippingFee(),total:getTotal(),paymentMethod,timestamp}}
 function finalizeOrder(order){state.orders.unshift(order);saveState(STORAGE_KEYS.orders,state.orders);state.cart=[];saveState(STORAGE_KEYS.cart,state.cart);el.checkoutForm.reset();el.rzpStatus.textContent="";el.rzpStatus.className="status-message";renderCart();renderOrders();renderCheckoutSummary();closeCheckout();closeCart();openConfirmation(order);}
 function validateCheckoutForm(){if(!state.cart.length){el.rzpStatus.textContent="Cart is empty.";el.rzpStatus.className="status-message error";return null}if(!el.checkoutForm.reportValidity())return null;const phoneInput=document.getElementById("customerPhone");if(phoneInput.value.length!==10||!/^\d{10}$/.test(phoneInput.value)){el.rzpStatus.textContent="Phone number must be exactly 10 digits.";el.rzpStatus.className="status-message error";phoneInput.focus();return null}const pincodeInput=document.getElementById("customerPincode");if(pincodeInput.value.length!==6||!/^\d{6}$/.test(pincodeInput.value)){el.rzpStatus.textContent="Pincode must be exactly 6 digits.";el.rzpStatus.className="status-message error";pincodeInput.focus();return null}return new FormData(el.checkoutForm)}
-function startRazorpayPayment(){const formData=validateCheckoutForm();if(!formData)return;const order=buildOrder(formData,"Razorpay");const totalPaise=Math.round(order.total*100);if(totalPaise<=0){el.rzpStatus.textContent="Invalid amount.";el.rzpStatus.className="status-message error";returnconst options={
-  key: RAZORPAY_KEY,
-  amount: totalPaise,
-  currency: "INR",
-  name: "IYERVAL FOODS",
-  description: "Order " + order.orderId,
+function startRazorpayPayment(){
+  const formData = validateCheckoutForm();
+  if(!formData) return;
 
-  method: {
-    upi: true,
-    card: true,
-    netbanking: true,
-    wallet: true
-  },
+  const order = buildOrder(formData, "Razorpay");
+  const totalPaise = Math.round(order.total * 100);
 
-  prefill: {
-    name: order.name,
-    contact: order.phone
-  },amount:totalPaise,currency:"INR",name:"IYERVAL FOODS",description:"Order "+order.orderId,prefill:{name:order.name,contact:order.phone},theme:{color:"#ff8c00"},handler:function(response){if(response.razorpay_payment_id){el.rzpStatus.textContent=`Payment successful! Payment ID: ${response.razorpay_payment_id}`;el.rzpStatus.className="status-message success";finalizeOrder(order)}else{el.rzpStatus.textContent="Payment failed or cancelled.";el.rzpStatus.className="status-message error"}},modal:{ondismiss:function(){el.rzpStatus.textContent="Payment popup closed. Order not placed.";el.rzpStatus.className="status-message warn"}}};const rzp=new Razorpay(options);rzp.open();}
+  if(totalPaise <= 0){
+    el.rzpStatus.textContent = "Invalid amount.";
+    el.rzpStatus.className = "status-message error";
+    return;
+  }
+
+  const options = {
+    key: RAZORPAY_KEY,
+    amount: totalPaise,
+    currency: "INR",
+    name: "IYERVAL FOODS",
+    description: "Order " + order.orderId,
+
+    method: {
+      upi: true,
+      card: true,
+      netbanking: true,
+      wallet: true
+    },
+
+    prefill: {
+      name: order.name,
+      contact: order.phone
+    },
+
+    theme: {
+      color: "#ff8c00"
+    },
+
+    handler: function(response){
+      if(response.razorpay_payment_id){
+        el.rzpStatus.textContent =
+          `Payment successful! Payment ID: ${response.razorpay_payment_id}`;
+        el.rzpStatus.className = "status-message success";
+        finalizeOrder(order);
+      } else {
+        el.rzpStatus.textContent = "Payment failed or cancelled.";
+        el.rzpStatus.className = "status-message error";
+      }
+    },
+
+    modal: {
+      ondismiss: function(){
+        el.rzpStatus.textContent =
+          "Payment popup closed. Order not placed.";
+        el.rzpStatus.className = "status-message warn";
+      }
+    }
+  };
+
+  const rzp = new Razorpay(options);
+  rzp.open();
+}
 function toggleAdminPanel(forceState){if(typeof forceState==="boolean")state.adminVisible=forceState;else if(!state.adminVisible){const password=window.prompt("Enter admin password");if(password!=="1976")return;state.adminVisible=true}else state.adminVisible=false;saveState(STORAGE_KEYS.adminVisible,state.adminVisible);el.adminPanel.classList.toggle("visible",state.adminVisible);if(state.adminVisible){renderOrders();el.adminPanel.scrollIntoView({behavior:"smooth",block:"start"})}}
 function exportOrdersCSV(){if(!state.orders.length){window.alert("No orders available to export yet.");return}const rows=[["Order ID","Name","Phone","Pincode","Address","Notes","Items","Subtotal","Shipping","Total","Payment","Timestamp"]];state.orders.forEach(order=>rows.push([order.orderId,order.name,order.phone,order.pincode,order.address,order.notes,order.items.map(item=>`${item.name} (${item.weightLabel}) x ${item.quantity}`).join(" | "),order.subtotal,order.shipping,order.total,order.paymentMethod,formatDate(order.timestamp)]));const csv=rows.map(row=>row.map(value=>`"${String(value??"").replace(/"/g,'""')}"`).join(",")).join("\n");const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});const url=URL.createObjectURL(blob);const link=document.createElement("a");link.href=url;link.download="iyerval-orders.csv";link.click();URL.revokeObjectURL(url)}
 function shareWhatsApp(){if(!state.orders.length){window.alert("No orders available to share yet.");return}const order=[...state.orders].sort((a,b)=>b.timestamp-a.timestamp)[0];const message=[`🍽️ IYERVAL FOODS ORDER\n━━━━━━━━━━━━━━━━\n📌 ORDER ID: ${order.orderId}\n👤 NAME: ${order.name}\n📞 PHONE: ${order.phone}\n📍 PINCODE: ${order.pincode}\n🏠 ADDRESS: ${order.address}\n📝 NOTES: ${order.notes||'N/A'}\n━━━━━━━━━━━━━━━━\n🛒 ITEMS:\n${order.items.map(i=>`   • ${i.name} (${i.weightLabel}) x${i.quantity} = ${formatCurrency(i.price*i.quantity)}`).join('\n')}\n━━━━━━━━━━━━━━━━\n💰 SUBTOTAL: ${formatCurrency(order.subtotal)}\n🚚 SHIPPING: ${formatCurrency(order.shipping)}\n💵 TOTAL: ${formatCurrency(order.total)}\n💳 PAYMENT: ${order.paymentMethod}\n🕒 PLACED: ${formatDate(order.timestamp)}`].join("\n");window.open("https://wa.me/?text="+encodeURIComponent(message),"_blank")}
