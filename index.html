@@ -320,7 +320,7 @@ ul, ol { list-style: none; }
 }
 .hero-card-media {
   min-height: 420px; position: relative;
-  background: url(https://github.com/IYERVALFOODS/iyerfood/blob/main/assets/240_F_1588623526_ckztwNhWh51A0ZXKxDgbhN4sEKTCG4T4.jpg) center/cover;
+  background: url(https://cdn.jsdelivr.net/gh/IYERVALFOODS/iyerfood/assets/240_F_1588623526_ckztwNhWh51A0ZXKxDgbhN4sEKTCG4T4.jpg) center/cover;
 }
 .hero-card-media::after {
   content: ''; position: absolute; inset: 0;
@@ -1969,6 +1969,25 @@ function init() {
 init();
 
 let unlockMode = null;
+  window.addEventListener("DOMContentLoaded", () => {
+  const input = document.getElementById("passcodeInput");
+
+  if (input) {
+    input.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        checkPasscode();
+      }
+    });
+
+    input.focus();
+  }
+
+  // ALSO attach button click here
+  const btn = document.getElementById("passcodeSubmitBtn");
+  if (btn) {
+    btn.addEventListener("click", checkPasscode);
+  }
+});
 
 document.getElementById("testModeBtn").onclick = () => {
   unlockMode = "test";
@@ -2035,11 +2054,10 @@ display:none; align-items:center; justify-content:center; z-index:9999;">
     <h3 style="margin-bottom:10px;">Enter Passcode</h3>
     <input id="passcodeInput" type="password" placeholder="Enter code"
       style="width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:10px;" />
-    
-    <button onclick="checkPasscode()" style="
-    padding:10px 20px; border-radius:8px; background:#ff8c00; border:none;">
-      Unlock
-    </button>
+
+    <button id="passcodeSubmitBtn">
+  Unlock
+</button>
 
     <p id="passError" style="color:red; font-size:12px; margin-top:8px;"></p>
   </div>
