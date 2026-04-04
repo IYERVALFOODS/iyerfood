@@ -1269,6 +1269,25 @@ section { position: relative; padding: 6rem 0; }
    IYERVAL FOODS – Enhanced Application
    ═══════════════════════════════════════════ */
 
+function checkPasscode() {
+  const input = document.getElementById("passcodeInput").value;
+
+  if (input === "1976") {
+    // unlock admin
+    localStorage.setItem(STORAGE_KEYS.adminVisible, "true");
+
+    // SHOW ADMIN PANEL
+    document.getElementById("adminPanel").classList.add("visible");
+
+    // LOAD ORDERS
+    renderOrders();
+
+    showToast("Admin unlocked", "success");
+  } else {
+    showToast("Wrong passcode", "error");
+  }
+}
+  
 const RAZORPAY_KEY = "rzp_test_SYWrfVzSNTbDes";
 const STORAGE_KEYS = {
   cart: "iyerval-cart-v2",
