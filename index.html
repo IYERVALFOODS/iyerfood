@@ -1762,26 +1762,18 @@ function startRazorpayPayment() {
   const paise = Math.round(order.total * 100);
   if (paise <= 0) { el.rzpStatus.textContent = "Invalid amount."; return; }
   const rzp = new Razorpay({
-  key: RAZORPAY_KEY,
-  amount: paise,
-  currency: "INR",
-  name: "IYERVAL FOODS",
-  description: "Order " + order.orderId,
-
-  prefill: {
-    name: order.name,
-    contact: order.phone
-  },
-
-  theme: { color: "#ff8c00" },
-
-  method: {
-    upi: true,
-    card: true,
-    netbanking: true,
-    wallet: false,     // ❌ disable wallets
-    paylater: false    // ❌ disable pay later
-  },
+    key: RAZORPAY_KEY, amount: paise, currency: "INR",
+    name: "IYERVAL FOODS", description: "Order " + order.orderId,
+    prefill: { name: order.name, contact: order.phone },
+    theme: { color: "#ff8c00" },
+    handler(res) {
+      if (res.razorpay_payment_id) { el.rzpStatus.textContent = "Payment successful!"; finalizeOrder(order); }
+      else { el.rzpStatus.textContent = "Payment failed."; toast("Payment failed", "error"); }
+    },
+    modal: { ondismiss() { el.rzpStatus.textContent = "Payment cancelled."; toast("Payment cancelled", "warn"); } }
+  });
+  rzp.open();
+}
 
   handler(res) {
     if (res.razorpay_payment_id) {
