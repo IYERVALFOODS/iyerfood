@@ -1273,18 +1273,35 @@ function checkPasscode() {
   const input = document.getElementById("passcodeInput").value;
 
   if (input === "1976") {
-    // unlock admin
-    localStorage.setItem(STORAGE_KEYS.adminVisible, "true");
 
-    // SHOW ADMIN PANEL
-    document.getElementById("adminPanel").classList.add("visible");
+    // CLOSE POPUP
+    document.getElementById("passcodePopup").style.display = "none";
 
-    // LOAD ORDERS
-    renderOrders();
+    // ADMIN MODE
+    if (unlockMode === "admin") {
+      state.adminVisible = true;
+      saveState(STORAGE_KEYS.adminVisible, true);
 
-    showToast("Admin unlocked", "success");
+      document.getElementById("adminPanel").classList.add("visible");
+      renderOrders();
+
+      toast("Admin unlocked 🔓", "success");
+    }
+
+    // TEST MODE
+    if (unlockMode === "test") {
+      state.testUnlocked = true;
+      saveState(STORAGE_KEYS.testUnlocked, true);
+
+      renderMenu();
+      el.menuHint.textContent = "✓ Test Mode active – ₹1 product visible";
+
+      toast("Test Mode unlocked 🧪", "success");
+    }
+
   } else {
-    showToast("Wrong passcode", "error");
+    document.getElementById("passError").innerText = "Wrong passcode";
+    toast("Wrong passcode", "error");
   }
 }
   
