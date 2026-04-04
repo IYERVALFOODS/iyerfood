@@ -1969,6 +1969,15 @@ function init() {
 init();
 
 let unlockMode = null;
+  document.getElementById("adminToggleBtn").onclick = () => {
+  unlockMode = "admin";
+  openPassPopup();
+};
+
+document.getElementById("testModeBtn").onclick = () => {
+  unlockMode = "test";
+  openPassPopup();
+};
   window.addEventListener("DOMContentLoaded", () => {
   const input = document.getElementById("passcodeInput");
 
@@ -1989,17 +1998,7 @@ let unlockMode = null;
   }
 });
 
-document.getElementById("testModeBtn").onclick = () => {
-  unlockMode = "test";
-  openPassPopup();
-};
-
-document.getElementById("adminToggleBtn").onclick = () => {
-  unlockMode = "admin";
-  openPassPopup();
-};
-
-function openPassPopup() {
+  function openPassPopup() {
   const popup = document.getElementById("passcodePopup");
   const input = document.getElementById("passcodeInput");
 
@@ -2015,33 +2014,7 @@ function openPassPopup() {
     if (e.key === "Enter") checkPasscode();
   };
 }
-
-function checkPasscode() {
-  const code = document.getElementById("passcodeInput").value;
-
-  if (code === "1976") {
-    document.getElementById("passcodePopup").style.display = "none";
-
-    if (unlockMode === "test") {
-      state.testUnlocked = true;
-      saveState(STORAGE_KEYS.testUnlocked, true);
-
-      toast("Test item unlocked 🔓", "success");
-      renderMenu();
-    }
-
-    if (state.adminVisible) {
-  document.getElementById("adminPanel").classList.add("visible");
-  renderOrders();
-}
-
-  } else {
-    document.getElementById("passError").innerText = "Wrong passcode";
-  }
-}
-
 </script>
-
 <!-- PASSCODE POPUP -->
 <div id="passcodePopup" style="
 position:fixed; inset:0; background:rgba(0,0,0,0.7);
