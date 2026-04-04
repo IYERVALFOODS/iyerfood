@@ -1775,24 +1775,6 @@ function startRazorpayPayment() {
   rzp.open();
 }
 
-  handler(res) {
-    if (res.razorpay_payment_id) {
-      el.rzpStatus.textContent = "Payment successful!";
-      finalizeOrder(order);
-    } else {
-      el.rzpStatus.textContent = "Payment failed.";
-      toast("Payment failed", "error");
-    }
-  },
-
-  modal: {
-    ondismiss() {
-      el.rzpStatus.textContent = "Payment cancelled.";
-      toast("Payment cancelled", "warn");
-    }
-  }
-});
-
 function exportOrdersCSV() {
   if (!state.orders.length) { toast("No orders to export", "warn"); return; }
   const rows = [["Order ID","Name","Phone","Pincode","Address","Notes","Items","Subtotal","Shipping","Total","Payment","Timestamp","Status"]];
