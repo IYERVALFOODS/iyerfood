@@ -392,31 +392,6 @@ section { position: relative; padding: 6rem 0; }
   font-weight: 600; font-size: .88rem; letter-spacing: .02em;
 }
 
-/* ─── TESTIMONIALS ─── */
-.testimonials-grid {
-  display: grid; grid-template-columns: repeat(3, minmax(0,1fr));
-  gap: 1rem;
-}
-.testimonial-card {
-  padding: 1.5rem; border-radius: var(--radius-md);
-  transition: all var(--ease);
-}
-.testimonial-card:hover { transform: translateY(-4px); border-color: rgba(255,140,0,.12); }
-.testimonial-stars { color: var(--accent2); font-size: .9rem; margin-bottom: .6rem; letter-spacing: .1em; }
-.testimonial-text {
-  font-size: .92rem; color: var(--muted); line-height: 1.8;
-  font-style: italic; margin-bottom: 1rem;
-}
-.testimonial-author { display: flex; align-items: center; gap: .7rem; }
-.testimonial-avatar {
-  width: 40px; height: 40px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--accent), var(--accent2));
-  display: grid; place-items: center;
-  font-weight: 800; font-size: .85rem; color: #1a0e00;
-}
-.testimonial-name { font-weight: 600; font-size: .88rem; }
-.testimonial-loc { font-size: .76rem; color: var(--muted); }
-
 /* ─── MENU ─── */
 .toolbar {
   display: flex; flex-wrap: wrap; justify-content: space-between;
@@ -846,7 +821,7 @@ section { position: relative; padding: 6rem 0; }
 /* ─── RESPONSIVE ─── */
 @media (max-width: 1080px) {
   .menu-grid { grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .checkout-layout, .hero-grid, .about-grid, .contact-grid, .testimonials-grid { grid-template-columns: 1fr; }
+  .checkout-layout, .hero-grid, .about-grid, .contact-grid { grid-template-columns: 1fr; }
   .hero-card { justify-self: start; }
 }
 @media (max-width: 820px) {
@@ -866,7 +841,6 @@ section { position: relative; padding: 6rem 0; }
   .nav-links a { padding: .75rem 1rem; border-radius: 12px; }
   .hamburger { display: inline-grid; place-items: center; }
   .support-strip, .about-stats { grid-template-columns: 1fr; }
-  .testimonials-grid { grid-template-columns: 1fr; }
 }
 @media (max-width: 640px) {
   .navbar { padding-bottom: .3rem; }
@@ -1055,18 +1029,6 @@ section { position: relative; padding: 6rem 0; }
         <div class="about-media-badge">✦ Preservative‑free · Naturally air‑dried · No artificial flavours</div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section id="testimonials" class="reveal">
-  <div class="container">
-    <div class="section-head">
-      <span class="eyebrow">What people say</span>
-      <h2>Loved by families across India.</h2>
-      <p>Real feedback from real customers who chose pure, preservative-free food.</p>
-    </div>
-    <div class="testimonials-grid" id="testimonialsGrid"></div>
   </div>
 </section>
 
@@ -1263,53 +1225,26 @@ section { position: relative; padding: 6rem 0; }
   </div>
 </div>
 
+<!-- PASSCODE POPUP (initially hidden) -->
+<div id="passcodePopup" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:10000;">
+  <div style="background:#111;padding:2rem;border-radius:20px;text-align:center;border:1px solid rgba(255,255,255,0.1);max-width:340px;width:90%;">
+    <h3 style="margin-bottom:1rem;">Enter Passcode</h3>
+    <input id="passcodeInput" type="password" placeholder="Enter code" style="width:100%;padding:12px;border-radius:12px;background:#1a1a1c;border:1px solid rgba(255,255,255,0.1);color:white;margin-bottom:1rem;" />
+    <button id="passcodeSubmitBtn" style="background:#ff8c00;border:none;padding:10px 20px;border-radius:30px;font-weight:bold;width:100%;">Unlock</button>
+    <p id="passError" style="color:#f87171;margin-top:12px;font-size:0.8rem;"></p>
+  </div>
+</div>
+
 <script>
 /* ═══════════════════════════════════════════
-   IYERVAL FOODS – Enhanced Application
+   IYERVAL FOODS – No fake reviews, test mode always hidden on fresh load
    ═══════════════════════════════════════════ */
-
-function checkPasscode() {
-  const input = document.getElementById("passcodeInput").value;
-
-  if (input === "1976") {
-
-    // CLOSE POPUP
-    document.getElementById("passcodePopup").style.display = "none";
-
-    // ADMIN MODE
-    if (unlockMode === "admin") {
-      state.adminVisible = true;
-      saveState(STORAGE_KEYS.adminVisible, true);
-
-      document.getElementById("adminPanel").classList.add("visible");
-      renderOrders();
-
-      toast("Admin unlocked 🔓", "success");
-    }
-
-    // TEST MODE
-    if (unlockMode === "test") {
-      state.testUnlocked = true;
-      saveState(STORAGE_KEYS.testUnlocked, true);
-
-      renderMenu();
-      el.menuHint.textContent = "✓ Test Mode active – ₹1 product visible";
-
-      toast("Test Mode unlocked 🧪", "success");
-    }
-
-  } else {
-    document.getElementById("passError").innerText = "Wrong passcode";
-    toast("Wrong passcode", "error");
-  }
-}
- 
 const RAZORPAY_KEY = "rzp_test_SYWrfVzSNTbDes";
 const STORAGE_KEYS = {
   cart: "iyerval-cart-v2",
   orders: "iyerval-orders",
   adminVisible: "iyerval-admin-visible",
-  testUnlocked: "iyerval-test-mode"
+  // testUnlocked is NOT persisted – always starts false
 };
 const REGULAR_SHIPPING_FEE = 70;
 const WEIGHT_OPTIONS = [
@@ -1334,7 +1269,7 @@ const state = {
   cart: loadState(STORAGE_KEYS.cart, []),
   orders: loadState(STORAGE_KEYS.orders, []),
   adminVisible: loadState(STORAGE_KEYS.adminVisible, false),
-  testUnlocked: loadState(STORAGE_KEYS.testUnlocked, false)
+  testUnlocked: false  // ALWAYS false on page load – test item hidden until passcode entered
 };
 
 // ─── DOM REFS ───
@@ -1350,7 +1285,7 @@ const ids = [
   'ordersGrid','refreshOrdersBtn','exportOrdersBtn','shareOrdersBtn','feedbackForm',
   'feedbackStatus','orderSearchInput','orderFilterStatus','clearCompletedBtn',
   'statTotalOrders','statTotalRevenue','statPendingOrders','navbar','scrollTopBtn',
-  'toastContainer','testimonialsGrid'
+  'toastContainer','passcodePopup','passcodeInput','passcodeSubmitBtn','passError'
 ];
 ids.forEach(id => el[id] = document.getElementById(id));
 
@@ -1369,13 +1304,7 @@ function getWeightLabel(m) { const match = WEIGHT_OPTIONS.find(o => o.multiplier
 function getCompositeKey(id, w) { return id + "_" + w; }
 function calculateItemPrice(item, w) {
   const m = Number(w);
-
-  // Test item → always ₹1
-  if (item.id === 5) {
-    return 1;
-  }
-
-  // Normal items → price × weight
+  if (item.id === 5) return 1;
   return Number((item.basePrice * m).toFixed(2));
 }
 function hasRegularItems() { return state.cart.some(i => i.id !== 5); }
@@ -1423,31 +1352,41 @@ function spawnConfetti(count = 40) {
   }
 }
 
-// ─── CART COUNT BUMP ───
-function bumpCartCount() {
-  el.navCartCount.classList.remove('bump');
-  void el.navCartCount.offsetWidth;
-  el.navCartCount.classList.add('bump');
+// ─── PASSCODE LOGIC (Test mode is session-only, not saved) ───
+let unlockMode = null;
+function openPassPopup(mode) {
+  unlockMode = mode;
+  if (el.passcodePopup) {
+    el.passcodePopup.style.display = "flex";
+    if (el.passcodeInput) el.passcodeInput.value = "";
+    if (el.passError) el.passError.innerText = "";
+    if (el.passcodeInput) el.passcodeInput.focus();
+  }
+}
+function checkPasscode() {
+  const input = el.passcodeInput ? el.passcodeInput.value : "";
+  if (input === "1976") {
+    el.passcodePopup.style.display = "none";
+    if (unlockMode === "admin") {
+      state.adminVisible = true;
+      saveState(STORAGE_KEYS.adminVisible, true);
+      el.adminPanel.classList.add("visible");
+      renderOrders();
+      toast("Admin unlocked 🔓", "success");
+    } else if (unlockMode === "test") {
+      // Test mode is NOT persisted – only for this session
+      state.testUnlocked = true;
+      renderMenu();
+      if (el.menuHint) el.menuHint.textContent = "✓ Test Mode active – ₹1 test product visible (free shipping).";
+      toast("Test Mode unlocked 🧪 (session only)", "success");
+    }
+  } else {
+    if (el.passError) el.passError.innerText = "Wrong passcode";
+    toast("Wrong passcode", "error");
+  }
 }
 
-// ─── RENDER: TESTIMONIALS ───
-function renderTestimonials() {
-  el.testimonialsGrid.innerHTML = testimonials.map(t => `
-    <article class="testimonial-card glass">
-      <div class="testimonial-stars">${'★'.repeat(t.rating)}${'☆'.repeat(5 - t.rating)}</div>
-      <p class="testimonial-text">"${t.text}"</p>
-      <div class="testimonial-author">
-        <div class="testimonial-avatar">${t.name.charAt(0)}</div>
-        <div>
-          <div class="testimonial-name">${t.name}</div>
-          <div class="testimonial-loc">${t.location}</div>
-        </div>
-      </div>
-    </article>
-  `).join("");
-}
-
-// ─── RENDER: MENU ───
+// ─── RENDER MENU ───
 function renderMenu() {
   const items = visibleMenu().filter(item => {
     const matchFilter = state.selectedFilter === "All" || item.category === state.selectedFilter;
@@ -1486,7 +1425,7 @@ function renderMenu() {
   `).join("");
 }
 
-// ─── RENDER: CART ───
+// ─── RENDER CART ───
 function renderCart() {
   const count = getCartCount();
   const subtotal = getSubtotal();
@@ -1501,21 +1440,14 @@ function renderCart() {
   el.checkoutBtn.disabled = !state.cart.length;
   el.checkoutBtn.style.opacity = state.cart.length ? "1" : ".45";
 
-  // Update page title
-  document.title = count > 0
-    ? `(${count}) IYERVAL FOODS | Pure. Fresh. Preservative‑Free.`
-    : `IYERVAL FOODS | Pure. Fresh. Preservative‑Free.`;
+  document.title = count > 0 ? `(${count}) IYERVAL FOODS | Pure. Fresh. Preservative‑Free.` : `IYERVAL FOODS | Pure. Fresh. Preservative‑Free.`;
 
   if (!state.cart.length) {
     el.cartItemsContainer.innerHTML = '<div class="empty-state" style="padding:2rem;text-align:center;"><div class="empty-state-icon">🛒</div><p class="cart-empty">Your cart is empty.<br>Add a few favourites to get started.</p></div>';
     return;
   }
 
-  const getItemImage = (id) => {
-    const item = menuItems.find(i => i.id === id);
-    return item ? item.image : '';
-  };
-
+  const getItemImage = (id) => { const item = menuItems.find(i => i.id === id); return item ? item.image : ''; };
   el.cartItemsContainer.innerHTML = state.cart.map(item => `
     <article class="cart-item" data-cart-key="${item.key}">
       <div class="cart-item-head">
@@ -1543,7 +1475,7 @@ function renderCart() {
   `).join("");
 }
 
-// ─── RENDER: ORDERS ───
+// ─── RENDER ORDERS ───
 function renderOrders() {
   const search = el.orderSearchInput ? el.orderSearchInput.value.toLowerCase() : "";
   const filter = el.orderFilterStatus ? el.orderFilterStatus.value : "all";
@@ -1597,7 +1529,6 @@ function renderOrders() {
     </div>
   `).join("");
 
-  // Bind order card events
   document.querySelectorAll('.order-card').forEach(card => {
     card.addEventListener('click', e => {
       if (e.target.closest('.complete-btn') || e.target.closest('.delete-btn')) return;
@@ -1624,7 +1555,7 @@ function renderOrders() {
   });
 }
 
-// ─── RENDER: CHECKOUT SUMMARY ───
+// ─── RENDER CHECKOUT SUMMARY ───
 function renderCheckoutSummary() {
   if (!state.cart.length) {
     el.checkoutSummaryList.innerHTML = `<li><span>Cart empty</span><span>${formatCurrency(0)}</span></li>`;
@@ -1666,6 +1597,11 @@ function removeCartItem(key) {
   saveState(STORAGE_KEYS.cart, state.cart);
   renderCart(); renderCheckoutSummary();
   if (item) toast(`${item.name} removed`, "warn", 2000);
+}
+function bumpCartCount() {
+  el.navCartCount.classList.remove('bump');
+  void el.navCartCount.offsetWidth;
+  el.navCartCount.classList.add('bump');
 }
 
 // ─── PANEL CONTROLS ───
@@ -1822,7 +1758,7 @@ function handleFeedback(e) {
 
 // ─── ACTIVE NAV HIGHLIGHT ───
 function updateActiveNav() {
-  const sections = ['home', 'menu', 'about', 'testimonials', 'contact'];
+  const sections = ['home', 'menu', 'about', 'contact'];
   const scrollY = window.scrollY + 120;
   let current = 'home';
   sections.forEach(id => {
@@ -1948,6 +1884,12 @@ function bindEvents() {
   document.addEventListener("keydown", e => {
     if (e.key === "Escape") { closeCart(); closeCheckout(); closeConfirmation(); }
   });
+
+  // Admin / Test buttons
+  el.adminToggleBtn.addEventListener("click", () => openPassPopup("admin"));
+  el.testModeBtn.addEventListener("click", () => openPassPopup("test"));
+  if (el.passcodeSubmitBtn) el.passcodeSubmitBtn.addEventListener("click", checkPasscode);
+  if (el.passcodeInput) el.passcodeInput.addEventListener("keypress", (e) => { if (e.key === "Enter") checkPasscode(); });
 }
 
 // ─── REVEAL OBSERVER ───
@@ -1962,85 +1904,22 @@ function setupRevealAnimations() {
 
 // ─── INIT ───
 function init() {
+  // Ensure test mode is always disabled on fresh load (no persistence)
+  state.testUnlocked = false;
+  // Clear any leftover test mode flag from localStorage (if any)
+  localStorage.removeItem("iyerval-test-mode");
+  
+  if (state.adminVisible) el.adminPanel.classList.add("visible");
   renderMenu();
   renderCart();
   renderOrders();
   renderCheckoutSummary();
-  renderTestimonials();
   bindEvents();
   setupRevealAnimations();
-  if (state.testUnlocked) el.menuHint.textContent = "✓ Test Mode active – ₹1 test product visible (free shipping).";
   window.addEventListener("load", () => setTimeout(() => el.loadingScreen.classList.add("hidden"), 800));
 }
 
 init();
-
-let unlockMode = null;
-  document.getElementById("adminToggleBtn").onclick = () => {
-  unlockMode = "admin";
-  openPassPopup();
-};
-
-document.getElementById("testModeBtn").onclick = () => {
-  unlockMode = "test";
-  openPassPopup();
-};
-  window.addEventListener("DOMContentLoaded", () => {
-  const input = document.getElementById("passcodeInput");
-
-  if (input) {
-    input.addEventListener("keydown", (e) => {
-      if (e.key === "Enter") {
-        checkPasscode();
-      }
-    });
-
-    input.focus();
-  }
-
-  // ALSO attach button click here
-  const btn = document.getElementById("passcodeSubmitBtn");
-  if (btn) {
-    btn.addEventListener("click", checkPasscode);
-  }
-});
-
-  function openPassPopup() {
-  const popup = document.getElementById("passcodePopup");
-  const input = document.getElementById("passcodeInput");
-
-  popup.style.display = "flex";
-  input.value = "";
-  document.getElementById("passError").innerText = "";
-
-  // Focus input
-  input.focus();
-
-  // Enter key support
-  input.onkeydown = (e) => {
-    if (e.key === "Enter") checkPasscode();
-  };
-}
 </script>
-<!-- PASSCODE POPUP -->
-<div id="passcodePopup" style="
-position:fixed; inset:0; background:rgba(0,0,0,0.7);
-display:none; align-items:center; justify-content:center; z-index:9999;">
- 
-  <div style="
-  background:#111; padding:20px; border-radius:12px; text-align:center;
-  border:1px solid rgba(255,255,255,0.1); width:280px;">
-   
-    <h3 style="margin-bottom:10px;">Enter Passcode</h3>
-    <input id="passcodeInput" type="password" placeholder="Enter code"
-      style="width:100%; padding:10px; border-radius:8px; border:none; margin-bottom:10px;" />
-    <button id="passcodeSubmitBtn">
-  Unlock
-</button>
-
-    <p id="passError" style="color:red; font-size:12px; margin-top:8px;"></p>
-  </div>
-</div>
-
 </body>
 </html>
