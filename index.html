@@ -8,7 +8,7 @@
 <link rel="icon" type="image/png" href="https://raw.githubusercontent.com/IYERVALFOODS/iyerfood/main/assets/1.png" />
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 <style>
-/* ─── RESET & TOKENS ─── */
+/* ─── RESET & TOKENS (same as before, unchanged for brevity) ─── */
 :root {
   --bg: #0a0a0b;
   --panel: rgba(255,255,255,.06);
@@ -1225,7 +1225,7 @@ section { position: relative; padding: 6rem 0; }
   </div>
 </div>
 
-<!-- PASSCODE POPUP (initially hidden) -->
+<!-- PASSCODE POPUP -->
 <div id="passcodePopup" style="position:fixed;inset:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(10px);display:none;align-items:center;justify-content:center;z-index:10000;">
   <div style="background:#111;padding:2rem;border-radius:20px;text-align:center;border:1px solid rgba(255,255,255,0.1);max-width:340px;width:90%;">
     <h3 style="margin-bottom:1rem;">Enter Passcode</h3>
@@ -1237,14 +1237,13 @@ section { position: relative; padding: 6rem 0; }
 
 <script>
 /* ═══════════════════════════════════════════
-   IYERVAL FOODS – No fake reviews, test mode always hidden on fresh load
+   IYERVAL FOODS – Admin mode is session-only (no persistence)
    ═══════════════════════════════════════════ */
 const RAZORPAY_KEY = "rzp_test_SYWrfVzSNTbDes";
 const STORAGE_KEYS = {
   cart: "iyerval-cart-v2",
   orders: "iyerval-orders",
-  adminVisible: "iyerval-admin-visible",
-  // testUnlocked is NOT persisted – always starts false
+  // adminVisible is NOT persisted anymore – session only
 };
 const REGULAR_SHIPPING_FEE = 70;
 const WEIGHT_OPTIONS = [
@@ -1268,8 +1267,8 @@ const state = {
   searchQuery: "",
   cart: loadState(STORAGE_KEYS.cart, []),
   orders: loadState(STORAGE_KEYS.orders, []),
-  adminVisible: loadState(STORAGE_KEYS.adminVisible, false),
-  testUnlocked: false  // ALWAYS false on page load – test item hidden until passcode entered
+  adminVisible: false,   // Always false on page load – session only
+  testUnlocked: false    // Always false on page load – session only
 };
 
 // ─── DOM REFS ───
@@ -1352,7 +1351,7 @@ function spawnConfetti(count = 40) {
   }
 }
 
-// ─── PASSCODE LOGIC (Test mode is session-only, not saved) ───
+// ─── PASSCODE LOGIC (session only) ───
 let unlockMode = null;
 function openPassPopup(mode) {
   unlockMode = mode;
@@ -1369,12 +1368,11 @@ function checkPasscode() {
     el.passcodePopup.style.display = "none";
     if (unlockMode === "admin") {
       state.adminVisible = true;
-      saveState(STORAGE_KEYS.adminVisible, true);
+      // Do NOT save to localStorage – session only
       el.adminPanel.classList.add("visible");
       renderOrders();
-      toast("Admin unlocked 🔓", "success");
+      toast("Admin unlocked 🔓 (session only)", "success");
     } else if (unlockMode === "test") {
-      // Test mode is NOT persisted – only for this session
       state.testUnlocked = true;
       renderMenu();
       if (el.menuHint) el.menuHint.textContent = "✓ Test Mode active – ₹1 test product visible (free shipping).";
@@ -1904,12 +1902,15 @@ function setupRevealAnimations() {
 
 // ─── INIT ───
 function init() {
-  // Ensure test mode is always disabled on fresh load (no persistence)
+  // Ensure admin mode starts closed on every page load (session only)
+  state.adminVisible = false;
   state.testUnlocked = false;
   // Clear any leftover test mode flag from localStorage (if any)
   localStorage.removeItem("iyerval-test-mode");
   
-  if (state.adminVisible) el.adminPanel.classList.add("visible");
+  // Admin panel is hidden by default
+  el.adminPanel.classList.remove("visible");
+  
   renderMenu();
   renderCart();
   renderOrders();
